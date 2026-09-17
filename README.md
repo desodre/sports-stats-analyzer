@@ -6,9 +6,10 @@ validação temporal e comunicação de incerteza. Fonte inicial exclusiva:
 
 ## Estado atual
 
-Fases 0, 1 e 2 implementadas: ambiente uv, coleta, normalização versionada, qualidade
-e indicadores temporais. Coleta real validada com 380 partidas de BSA 2025.
-Testes automatizados usam dados sintéticos. Ainda não há modelos, previsões ou painel.
+Fases 0–3 implementadas: ambiente uv, coleta, normalização, indicadores, modelos
+estatísticos e avaliação temporal. Dados reais: 1.140 partidas de BSA 2023–2025.
+Teste retrospectivo favorável ao Poisson para 1X2; não comprova rentabilidade.
+Ainda não há serviço de previsões, painel ou execução de apostas.
 
 ## Iniciar
 
@@ -71,6 +72,32 @@ antes do corte entram nos indicadores. Esse buffer não comprova a hora de encer
 Casa/fora subdividem a mesma janela recente. Intervalo desde a última partida considera
 apenas os jogos do recorte, não descanso físico nem outras competições.
 Amostra pequena é sinalizada e médias sem jogos permanecem nulas.
+
+## Testar o modelo
+
+Após coletar e normalizar as três temporadas:
+
+```bash
+uv run sports-stats-analyzer collect matches --competition BSA --season 2023
+uv run sports-stats-analyzer collect matches --competition BSA --season 2024
+uv run sports-stats-analyzer collect matches --competition BSA --season 2025
+uv run sports-stats-analyzer normalize
+uv run sports-stats-analyzer evaluate --competition BSA --train-season 2023 --validation-season 2024 --test-season 2025 --retrospective
+```
+
+Se as temporadas já foram coletadas, execute apenas `evaluate`. Respeite a cota entre
+comandos de coleta. A avaliação é local e não consulta a API. Os parâmetros de ano
+delimitam anos civis UTC; veja o protocolo para temporadas que cruzam anos.
+
+O comando seleciona parâmetros em 2024 e testa em 2025 com treino atualizado em
+blocos semanais. Salva parâmetros, previsões, métricas e rastreabilidade em um JSON
+exclusivo em `data/experiments/`. O terminal informa o caminho e a conclusão.
+Sem `--retrospective`, dados devem ter sido observados antes dos cortes históricos;
+as coletas atuais não atendem a esse requisito para 2023–2025.
+
+Leia o [protocolo](docs/model-protocol.md) e o [resultado inicial](docs/experiments/bsa-2025.md).
+O mercado de gols não melhorou no experimento. A conclusão favorável de 1X2 não
+se estende a todos os mercados nem implica vantagem em relação às odds das casas.
 
 ## Verificar
 

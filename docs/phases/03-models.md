@@ -1,21 +1,24 @@
 # Fase 3 — Probabilidades e validação
 
-Estado: planejada. Depende de qualidade e histórico suficientes na fase 2.
+Estado: implementada e testada com BSA 2023–2025. Resultado promissor apenas para
+avançar à validação prospectiva de 1X2; não demonstra rentabilidade.
 
 ## Implementações
 
-- [ ] Criar baseline de frequências por competição e mando, treinado apenas no passado.
-- [ ] Ajustar Poisson com forças ofensiva/defensiva, mando e regularização.
-- [ ] Derivar 1X2, total de gols 2,5 e ambas marcam de uma distribuição de placares.
-- [ ] Controlar massa truncada da distribuição e garantir probabilidades consistentes.
-- [ ] Comparar Dixon–Coles como experimento, condicionado a ganho fora da amostra.
-- [ ] Criar validação walk-forward, com ajuste de hiperparâmetros apenas no treino.
-- [ ] Medir log loss, Brier score e calibração; quantificar incerteza das comparações.
-- [ ] Versionar modelo, features, corte, janela e conjunto de dados de cada previsão.
-- [ ] Definir abstenção para dados insuficientes ou entradas fora do domínio treinado.
+- [x] Baseline de frequências por competição e resultado relativo ao mando.
+- [x] Poisson com forças ofensiva/defensiva, mando e regularização.
+- [x] 1X2, total de gols 2,5 e ambas marcam derivados da distribuição de placares.
+- [x] Massa truncada controlada e probabilidades consistentes.
+- [x] Experimento com correção Dixon–Coles pós-ajuste; não selecionada na validação.
+- [x] Walk-forward; hiperparâmetros escolhidos na validação e congelados no teste.
+- [x] Log loss, Brier, calibração e bootstrap pareado por bloco temporal.
+- [x] Versões, parâmetros, hashes, revisões e corte de cada previsão no artefato.
+- [x] Abstenção por pouca amostra, equipe nova ou taxa/otimização inválida.
 
-Dependências candidatas: NumPy, SciPy, pandas e scikit-learn, adicionadas com uv
-quando utilizadas. Módulos previstos: `features/`, `models/`, `evaluation/`.
+Dependências adicionadas via uv: NumPy e SciPy. Implementação em `models.py`,
+`metrics.py`, `evaluation.py` e CLI; módulos simples em vez de pastas ainda desnecessárias.
+Comando disponível: `evaluate`. Esta fase produz artefatos de experimentos, não
+um serviço de previsões nem recomendações de apostas.
 
 ## Critérios de aceite
 
@@ -31,3 +34,14 @@ Testar probabilidades, simetria sem mando, equipes novas e ausência de vazament
 Incluir verificações contra dados posteriores ao horário da previsão. Backtest de
 resultados não valida notícias ou escalações históricas sem evidência temporal.
 Esta fase não declara rentabilidade: ainda não há histórico de odds adequado.
+
+## Evidências
+
+50 testes aprovados, incluindo 23 novos para modelos e avaliação temporal.
+Coletadas três temporadas com 380 partidas cada. Na validação de 2024, 361 jogos
+comuns aos candidatos; no teste de 2025, 365 previsões e 15 abstenções.
+
+Ver [protocolo](../model-protocol.md) para fórmulas, cortes, critérios e limitações;
+ver [resultado de BSA 2025](../experiments/bsa-2025.md) para métricas e conclusão.
+O período 2025 já foi consultado: não reutilizá-lo como teste intocado ao ajustar
+novos modelos. Próximas hipóteses exigem novo período reservado ou validação prospectiva.

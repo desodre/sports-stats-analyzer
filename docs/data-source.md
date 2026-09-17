@@ -47,5 +47,5 @@ headers `X-Unfold-*` controlam expansão, mas não concedem acesso fora do plano
 - [Planos e recursos comerciais](https://www.football-data.org/pricing)
 
 As capacidades acima distinguem implementação local de disponibilidade comercial.
-Uma chamada autenticada confirmou acesso às partidas de BSA 2025 em 17/09/2026:
-380 partidas. Outras temporadas e recursos ainda precisam de confirmação.
+Chamadas autenticadas confirmaram acesso a BSA 2023, 2024 e 2025 em 17/09/2026:
+380 partidas por temporada (1.140 no total). Outros recursos ainda precisam de confirmação.

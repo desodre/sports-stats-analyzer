@@ -10,8 +10,8 @@
 - pytest e Ruff: verificações de comportamento e padronização.
 
 Implementado na fase 2: contratos Pydantic, tabelas normalizadas com revisões,
-migração SQLite e indicadores descritivos. Planejado: pandas,
-NumPy, SciPy e scikit-learn apenas quando exigidos pela fase 3; Streamlit para
+migração SQLite e indicadores descritivos. Fase 3 implementada com NumPy/SciPy,
+modelos e avaliação temporal locais. Planejado: Streamlit para
 o painel da fase 6. FastAPI e PostgreSQL só se o uso multiusuário justificar.
 Não instalar antecipadamente uma stack de serviços distribuídos.
 

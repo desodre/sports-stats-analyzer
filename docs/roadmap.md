@@ -12,7 +12,7 @@ Nenhuma segunda API será integrada nesta etapa.
 | [0 — Fundação](phases/00-foundation.md) | Pacote, configuração e ferramentas | Implementada |
 | [1 — Coleta](phases/01-ingestion.md) | API v4, CLI e snapshots | Implementada; validada com BSA 2025 |
 | [2 — Dados analíticos](phases/02-analytics.md) | Normalização, qualidade e indicadores temporais | Implementada e validada |
-| [3 — Probabilidades](phases/03-models.md) | Baselines, Poisson e avaliação temporal | Planejada |
+| [3 — Probabilidades](phases/03-models.md) | Baselines, Poisson e avaliação temporal | Implementada; experimento BSA 2023–2025 concluído |
 | [4 — Escalações e contexto](phases/04-context.md) | Disponibilidade de jogadores e cenários | Planejada; condicionada à cobertura |
 | [5 — Avaliação de mercados](phases/05-markets.md) | Cotações informadas, valor esperado e simulação | Planejada |
 | [6 — Produto e operação](phases/06-product.md) | Painel, atualização e observabilidade | Planejada |
@@ -26,10 +26,10 @@ explícita. A fase 5 depende da validação da fase 3; a fase 7 exige nova decis
 sobre necessidade, custo, licença e provedor.
 
 Não estimamos prazos antes de confirmar competição, histórico acessível e cobertura.
-Coleta e qualidade verificadas em BSA 2025: 380 resultados e 20 equipes. O próximo
-marco é a fase 3: baseline e Poisson com avaliação temporal. Uma temporada permite
-um experimento inicial; acesso a temporadas adicionais e janela de treino/teste
-ainda precisam ser avaliados para medir estabilidade.
+Coleta ampliada para BSA 2023–2025: 1.140 resultados. Fase 3 concluída com evidência
+favorável para 1X2 em teste retrospectivo, sem comprovação financeira. Próximo marco
+do roteiro: auditar cobertura de jogadores/escalações na fase 4. Em paralelo ao
+roteiro futuro, validar previsões prospectivamente antes de qualquer conclusão de lucro.
 
 ## Regra de conclusão
 

@@ -3,7 +3,7 @@
 import json
 import re
 import sqlite3
-from datetime import datetime
+from datetime import UTC, datetime
 from enum import StrEnum
 from typing import Annotated
 
@@ -119,3 +119,28 @@ def team_report(
         window=window,
         retrospective=retrospective,
     )
+
+
+@app.command()
+def evaluate(
+    competition: Annotated[str, typer.Option(help="Uma competição, por código ou ID")],
+    train_season: Annotated[int, typer.Option(min=1900, max=2097)],
+    validation_season: Annotated[int, typer.Option(min=1901, max=2098)],
+    test_season: Annotated[int, typer.Option(min=1902, max=2099)],
+    retrospective: bool = False,
+) -> None:
+    """Compara baseline, Poisson e correção de placares baixos por ano civil UTC."""
+    from sports_stats_analyzer.evaluation import ExperimentConfig, save_experiment
+
+    try:
+        config = ExperimentConfig(
+            competition=competition,
+            train_start=datetime(train_season, 1, 1, tzinfo=UTC),
+            validation_start=datetime(validation_season, 1, 1, tzinfo=UTC),
+            test_start=datetime(test_season, 1, 1, tzinfo=UTC),
+            test_end=datetime(test_season + 1, 1, 1, tzinfo=UTC),
+            retrospective=retrospective,
+        )
+    except ValueError as error:
+        raise typer.BadParameter(str(error)) from None
+    local_report(save_experiment, config=config)
