@@ -1,0 +1,34 @@
+[project]
+name = "sports-stats-analyzer"
+version = "0.1.0"
+description = "Análise estatística de futebol com dados rastreáveis e validação temporal"
+readme = "README.md"
+authors = [
+    { name = "desodre", email = "jhonathacirilo9000@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "httpx>=0.28.1",
+    "pydantic-settings>=2.15.0",
+    "typer>=0.27.2",
+]
+
+[project.scripts]
+sports-stats-analyzer = "sports_stats_analyzer.cli:app"
+
+[build-system]
+requires = ["uv_build>=0.11.7,<0.12.0"]
+build-backend = "uv_build"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.16.8",
+]

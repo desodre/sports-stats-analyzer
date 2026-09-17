@@ -1,0 +1,1 @@
+"""Análise estatística de futebol."""
