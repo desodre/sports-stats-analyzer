@@ -24,7 +24,9 @@ que todas as temporadas ou competições estejam incluídas no plano contratado.
 A documentação de políticas informa 10 requisições/minuto para clientes gratuitos;
 o padrão local é 10, configurável. O header `X-RequestCounter-Reset` informa o tempo
 para reiniciar a cota. Na versão inicial, HTTP 429 interrompe a coleta com orientação
-para aguardar. A limitação local não cobre outros processos usando o mesmo token.
+para aguardar. Na fase 6, o job repete até três vezes falhas transitórias e processos
+que compartilham `SPORTS_RATE_LIMIT_DIR` coordenam cota por credencial. Não cobre outras
+máquinas ou aplicativos externos que não usam esse lock.
 
 `null` e listas vazias são respostas válidas. Nunca transformar placar ausente em
 zero. Elenco não é escalação confirmada. Listagens podem ocultar detalhes por padrão;

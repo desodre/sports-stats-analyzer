@@ -89,6 +89,8 @@ def local_report(action, **kwargs):
         typer.echo(f"Falha: {error}", err=True)
         raise typer.Exit(1) from None
     typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
+    if isinstance(result, dict) and result.get("status") == "failed":
+        raise typer.Exit(1)
 
 
 @app.command()
@@ -305,3 +307,70 @@ def paper_wallet() -> None:
     from sports_stats_analyzer.markets import wallet
 
     local_report(wallet)
+
+
+@app.command()
+def update_data(competition: str = "BSA", season: int | None = None) -> None:
+    """Atualiza partidas sequencialmente, com até três tentativas e registro de execução."""
+    from sports_stats_analyzer.operations import update
+
+    local_report(update, competition=competition, season=season)
+
+
+@app.command()
+def health(competition: str = "BSA", season: int | None = None) -> None:
+    """Mostra atualização e saúde dos dados locais."""
+    from sports_stats_analyzer.operations import health as report_health
+
+    local_report(report_health, competition=competition, season=season)
+
+
+@app.command()
+def backup() -> None:
+    """Cria cópia consistente e verificada do banco local."""
+    from sports_stats_analyzer.operations import backup as create_backup
+
+    local_report(create_backup)
+
+
+@app.command()
+def restore(source: str, target: str) -> None:
+    """Restaura um backup para um arquivo NOVO; nunca sobrescreve o banco ativo."""
+    from pathlib import Path
+
+    from sports_stats_analyzer.operations import copy_database
+
+    try:
+        typer.echo(json.dumps(copy_database(Path(source), Path(target)), indent=2))
+    except (ValueError, sqlite3.Error, OSError):
+        typer.echo("Restauração falhou: confira origem, integridade e destino novo.", err=True)
+        raise typer.Exit(1) from None
+
+
+@app.command()
+def dashboard(port: Annotated[int, typer.Option(min=1024, max=65535)] = 8501) -> None:
+    """Abre servidor do painel apenas em localhost, sem publicar na rede."""
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    script = Path(__file__).with_name("dashboard.py")
+    raise typer.Exit(
+        subprocess.call(
+            [
+                sys.executable,
+                "-m",
+                "streamlit",
+                "run",
+                str(script),
+                "--server.address",
+                "127.0.0.1",
+                "--server.port",
+                str(port),
+                "--server.headless",
+                "true",
+                "--browser.gatherUsageStats",
+                "false",
+            ]
+        )
+    )

@@ -9,10 +9,10 @@ validação temporal e comunicação de incerteza. Fonte inicial exclusiva:
 Fases 0–3 implementadas: ambiente uv, coleta, normalização, indicadores, modelos
 estatísticos e avaliação temporal. Dados reais: 1.140 partidas de BSA 2023–2025.
 Teste retrospectivo favorável ao Poisson para 1X2; não comprova rentabilidade.
-Ainda não há serviço de previsões, painel ou execução de apostas.
+Não há execução de apostas em casas.
 
 Fase 5 disponível: previsões prospectivas pela CLI, odds manuais/CSV, avaliação de EV
-e carteira virtual. Sem painel ou apostas em casas. Rentabilidade não validada;
+e carteira virtual. Rentabilidade não validada;
 até a entrega desta fase, nenhuma cotação real foi cadastrada.
 
 Fase 4: coleta e relatórios de contexto disponíveis. A auditoria acessou elenco e
@@ -54,9 +54,11 @@ SELECT id, provider, endpoint, fetched_at FROM snapshots ORDER BY id DESC;
 ```
 
 O cliente espaça requisições dentro da mesma instância. Evite coletas concorrentes:
-a cota é compartilhada pelo token e ainda não existe coordenação entre processos.
+a cota é compartilhada pelo token. Na fase 6, processos que usam o mesmo diretório
+`SPORTS_RATE_LIMIT_DIR` coordenam requisições via lock por credencial.
 Erros de rede, autenticação, cobertura e limite encerram o comando com código 1;
-parâmetros inválidos usam código 2. Não há repetição automática nesta fase.
+parâmetros inválidos usam código 2. `collect` faz uma tentativa; `update-data` faz até três
+para falhas transitórias, respeitando backoff e cota.
 
 ## Normalizar e analisar
 
@@ -151,7 +153,33 @@ Sem apostas liquidadas, ROI é nulo. Não há acesso a casas ou movimentação d
 
 Leia as [regras da carteira](docs/paper-trading.md) e a [validação da fase 5](docs/experiments/phase-5-validation.md).
 
+## Painel e operação
+
+```bash
+uv run sports-stats-analyzer dashboard
+```
+
+Abra `http://127.0.0.1:8501`. Painel local com partidas, times, previsões, carteira e
+qualidade. Atualizações e previsões exigem ação explícita; não há apostas automáticas.
+Os locks operacionais requerem Linux/macOS (testado em Linux).
+
+```bash
+uv run sports-stats-analyzer update-data --competition BSA --season 2026
+uv run sports-stats-analyzer health --competition BSA --season 2026
+uv run sports-stats-analyzer backup
+```
+
+Restauração exige destino novo. Veja [operação, backups e agendamento](docs/operations.md).
+O workflow de CI do GitHub executa a mesma rotina em pushes e pull requests. A primeira
+execução remota depende do próximo push; publicação/deploy continuam fora do escopo.
+
 ## Verificar
+
+Rotina completa, também utilizável por um runner de CI futuro:
+
+```bash
+sh scripts/check.sh
+```
 
 ```bash
 uv run pytest

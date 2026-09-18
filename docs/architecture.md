@@ -11,8 +11,8 @@
 
 Implementado na fase 2: contratos Pydantic, tabelas normalizadas com revisões,
 migração SQLite e indicadores descritivos. Fase 3 implementada com NumPy/SciPy,
-modelos e avaliação temporal locais. Planejado: Streamlit para
-o painel da fase 6. FastAPI e PostgreSQL só se o uso multiusuário justificar.
+modelos e avaliação temporal locais. Fase 6: Streamlit para painel local, operações
+SQLite e monitoramento. FastAPI e PostgreSQL só se o uso multiusuário justificar.
 Não instalar antecipadamente uma stack de serviços distribuídos.
 
 Fase 5: `markets.py` usa Decimal para odds e valores da carteira, CSV da biblioteca
@@ -45,10 +45,10 @@ final de uma temporada como variável de uma partida dessa mesma temporada.
 
 ## Operação inicial
 
-Uso local e sequencial. Limitação de requisições por instância, sem coordenação
-entre processos. Não repetir automaticamente chamadas com falha. Na fase 6,
-adicionar fila única, retries limitados com backoff e respeito aos cabeçalhos da API,
-retenção, backup e monitoramento. SQLite é suficiente até evidência de necessidade
+Uso local. Fase 6 adicionou lock por banco para atualização, lock por credencial
+para requisições, retries limitados no job, headers de cota, backup e monitoramento.
+Coordenação exige o mesmo diretório de locks e não cobre outras máquinas.
+SQLite é suficiente até evidência de necessidade
 de concorrência de escrita ou serviço compartilhado.
 
 Credenciais ficam no ambiente. Não registrar headers nem corpos de erro remotos.

@@ -15,7 +15,7 @@ Nenhuma segunda API será integrada nesta etapa.
 | [3 — Probabilidades](phases/03-models.md) | Baselines, Poisson e avaliação temporal | Implementada; experimento BSA 2023–2025 concluído |
 | [4 — Escalações e contexto](phases/04-context.md) | Auditoria, elencos e contexto observado | Implementada no escopo disponível; efeitos individuais adiados |
 | [5 — Avaliação de mercados](phases/05-markets.md) | Cotações, valor esperado e carteira virtual prospectiva | Implementada; rentabilidade ainda não validada |
-| [6 — Produto e operação](phases/06-product.md) | Painel, atualização e observabilidade | Planejada |
+| [6 — Produto e operação](phases/06-product.md) | Painel local, atualização, monitoramento e backup | Implementada; primeira CI remota depende de push |
 | [7 — Enriquecimento](phases/07-enrichment.md) | Notícias e dados avançados de fontes futuras | Adiada |
 
 ## Ordem e decisões
@@ -28,7 +28,9 @@ sobre necessidade, custo, licença e provedor.
 Não estimamos prazos antes de confirmar competição, histórico acessível e cobertura.
 Coleta ampliada para BSA 2023–2025: 1.140 resultados. Fase 3 concluída com evidência
 favorável para 1X2 em teste retrospectivo, sem comprovação financeira. Próximo marco
-do roteiro: fase 6, painel e operação. A fase 5 entregou previsões prospectivas,
+do roteiro: decisões da fase 7 sobre enriquecimento, caso necessário. Painel local,
+atualização, backup e workflow de CI para GitHub foram entregues.
+A fase 5 entregou previsões prospectivas,
 odds manuais/CSV e carteira virtual, ainda sem apostas reais observadas.
 A auditoria da fase 4 encontrou
 perfis/elenco, mas não escalações e eventos para BSA 2025; efeitos individuais passam
