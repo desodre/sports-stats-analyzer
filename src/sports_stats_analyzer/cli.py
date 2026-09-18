@@ -42,6 +42,7 @@ def collect(
         raise typer.BadParameter("Competição deve ser um código ou ID alfanumérico.")
     if unfold and resource != Resource.matches:
         raise typer.BadParameter("--unfold aplica-se apenas a matches.")
+    assert competition is not None
     endpoint = (
         "competitions"
         if resource == Resource.competitions
