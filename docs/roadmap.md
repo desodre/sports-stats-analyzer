@@ -13,7 +13,7 @@ Nenhuma segunda API será integrada nesta etapa.
 | [1 — Coleta](phases/01-ingestion.md) | API v4, CLI e snapshots | Implementada; validada com BSA 2025 |
 | [2 — Dados analíticos](phases/02-analytics.md) | Normalização, qualidade e indicadores temporais | Implementada e validada |
 | [3 — Probabilidades](phases/03-models.md) | Baselines, Poisson e avaliação temporal | Implementada; experimento BSA 2023–2025 concluído |
-| [4 — Escalações e contexto](phases/04-context.md) | Disponibilidade de jogadores e cenários | Planejada; condicionada à cobertura |
+| [4 — Escalações e contexto](phases/04-context.md) | Auditoria, elencos e contexto observado | Implementada no escopo disponível; efeitos individuais adiados |
 | [5 — Avaliação de mercados](phases/05-markets.md) | Cotações informadas, valor esperado e simulação | Planejada |
 | [6 — Produto e operação](phases/06-product.md) | Painel, atualização e observabilidade | Planejada |
 | [7 — Enriquecimento](phases/07-enrichment.md) | Notícias e dados avançados de fontes futuras | Adiada |
@@ -28,8 +28,9 @@ sobre necessidade, custo, licença e provedor.
 Não estimamos prazos antes de confirmar competição, histórico acessível e cobertura.
 Coleta ampliada para BSA 2023–2025: 1.140 resultados. Fase 3 concluída com evidência
 favorável para 1X2 em teste retrospectivo, sem comprovação financeira. Próximo marco
-do roteiro: auditar cobertura de jogadores/escalações na fase 4. Em paralelo ao
-roteiro futuro, validar previsões prospectivamente antes de qualquer conclusão de lucro.
+do roteiro: fase 5, cotações manuais/CSV e simulação. A auditoria da fase 4 encontrou
+perfis/elenco, mas não escalações e eventos para BSA 2025; efeitos individuais passam
+para a fase 7. Validar previsões prospectivamente antes de qualquer conclusão de lucro.
 
 ## Regra de conclusão
 

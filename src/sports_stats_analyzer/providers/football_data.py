@@ -39,7 +39,9 @@ class FootballDataClient:
     def __exit__(self, *_: object) -> None:
         self._http.close()
 
-    def get(self, endpoint: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
+    def get(
+        self, endpoint: str, params: dict[str, Any] | None = None, *, unfold: bool = False
+    ) -> dict[str, Any]:
         # Só caminhos relativos: impedir envio do token para outro host.
         if endpoint.startswith("/") or ":" in endpoint or ".." in endpoint:
             raise ValueError("Endpoint deve ser um caminho relativo da API.")
@@ -47,7 +49,20 @@ class FootballDataClient:
             time.sleep(max(0, self._interval - (time.monotonic() - self._last_request)))
         self._last_request = time.monotonic()
         try:
-            response = self._http.get(endpoint, params=params)
+            headers = (
+                {
+                    f"X-Unfold-{field}": "true"
+                    for field in (
+                        "Lineups",
+                        "Subs",
+                        "Goals",
+                        "Bookings",
+                    )
+                }
+                if unfold
+                else {}
+            )
+            response = self._http.get(endpoint, params=params, headers=headers)
         except httpx.RequestError:
             raise ProviderError(
                 "Falha de conexão com football-data.org; tente novamente."

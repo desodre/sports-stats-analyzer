@@ -11,6 +11,10 @@ estatísticos e avaliação temporal. Dados reais: 1.140 partidas de BSA 2023–
 Teste retrospectivo favorável ao Poisson para 1X2; não comprova rentabilidade.
 Ainda não há serviço de previsões, painel ou execução de apostas.
 
+Fase 4: coleta e relatórios de contexto disponíveis. A auditoria acessou elenco e
+perfil de jogador, mas não encontrou escalações/eventos nas partidas expandidas de
+BSA 2025. Impacto individual e minutos permanecem adiados, sem alterar o modelo.
+
 ## Iniciar
 
 Requer Python 3.12+ e uv.
@@ -98,6 +102,28 @@ as coletas atuais não atendem a esse requisito para 2023–2025.
 Leia o [protocolo](docs/model-protocol.md) e o [resultado inicial](docs/experiments/bsa-2025.md).
 O mercado de gols não melhorou no experimento. A conclusão favorável de 1X2 não
 se estende a todos os mercados nem implica vantagem em relação às odds das casas.
+
+## Jogadores e escalações
+
+```bash
+uv run sports-stats-analyzer collect-context team 1776
+uv run sports-stats-analyzer collect-context person 171241
+uv run sports-stats-analyzer collect-context match 534938
+uv run sports-stats-analyzer collect matches --competition BSA --season 2025 --unfold
+uv run sports-stats-analyzer context-coverage --competition BSA --season 2025
+uv run sports-stats-analyzer squad-report 1776 --before 2026-09-18T01:00:00Z
+uv run sports-stats-analyzer player-report 171241 --before 2026-09-18T01:00:00Z
+uv run sports-stats-analyzer context-report 534938 --before 2026-09-18T01:00:00Z
+```
+
+Use corte posterior à coleta desejada; os horários acima reproduzem a auditoria inicial.
+Os relatórios são locais e não exigem nova coleta. Respeite a cota ao executar consultas.
+`--unfold` solicita detalhes, sem conceder permissões além das disponíveis na conta.
+Elenco não é escalação; informações faltantes não comprovam desfalques. Minutos,
+métricas por 90 e ajustes de probabilidade permanecem nulos nesta entrega.
+
+Consulte a [auditoria de contexto](docs/experiments/context-coverage-bsa.md) para os
+dados encontrados, os limites e os itens adiados à fase 7.
 
 ## Verificar
 

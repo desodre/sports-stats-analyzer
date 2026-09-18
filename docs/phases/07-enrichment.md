@@ -3,6 +3,11 @@
 Estado: adiada por decisão de usar somente football-data.org inicialmente.
 Depende de lacunas demonstradas pelas fases anteriores e escolha futura de fontes.
 
+Lacuna demonstrada na fase 4: BSA 2025 não retornou escalações, bancos ou eventos
+mesmo com expansão solicitada. Minutos, efeitos individuais regularizados, cenários
+de escalação e avaliação incremental ficam adiados nesta fase. Perfis/elencos
+isolados não fornecem suporte para essas implementações.
+
 ## Plano de decisão
 
 - [ ] Inventariar lacunas: notícias, lesões, xG, eventos, pressão ou odds históricas.
