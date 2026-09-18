@@ -62,7 +62,7 @@ def test_status_and_regulation_scores(tmp_path):
         db,
         [
             game(1),
-            game(2, status="TIMED", home=None, away=None),
+            game(2, status="TIMED", home=None, away=None), # type: ignore
             game(3, status="POSTPONED"),
             game(4, status="CANCELLED"),
             game(5, status="AWARDED"),
@@ -183,7 +183,7 @@ def test_cli_reports(tmp_path, monkeypatch):
 
 def test_negative_goals_rejected_and_unknown_teams_preserved(tmp_path):
     db = tmp_path / "test.db"
-    unknown = game(2, status="SCHEDULED", home=None, away=None)
+    unknown = game(2, status="SCHEDULED", home=None, away=None) # type: ignore
     unknown["homeTeam"] = {"id": None, "name": None}
     snapshot(db, [game(home=-1), unknown])
     assert normalize(db)["rejected"] == 1
