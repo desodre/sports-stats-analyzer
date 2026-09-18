@@ -54,3 +54,6 @@ Chamadas autenticadas confirmaram acesso a BSA 2023, 2024 e 2025 em 17/09/2026:
 380 partidas por temporada (1.140 no total). Auditoria da fase 4 confirmou detalhes
 de equipe/pessoa, mas não obteve escalações/eventos mesmo expandindo BSA 2025.
 Veja [evidências da cobertura](experiments/context-coverage-bsa.md).
+
+Na fase 5, BSA 2026 também foi coletado (380 partidas, snapshot 8) para gerar uma
+previsão prospectiva. Cotações são entradas manuais/CSV, não vêm da API integrada.

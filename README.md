@@ -11,6 +11,10 @@ estatísticos e avaliação temporal. Dados reais: 1.140 partidas de BSA 2023–
 Teste retrospectivo favorável ao Poisson para 1X2; não comprova rentabilidade.
 Ainda não há serviço de previsões, painel ou execução de apostas.
 
+Fase 5 disponível: previsões prospectivas pela CLI, odds manuais/CSV, avaliação de EV
+e carteira virtual. Sem painel ou apostas em casas. Rentabilidade não validada;
+até a entrega desta fase, nenhuma cotação real foi cadastrada.
+
 Fase 4: coleta e relatórios de contexto disponíveis. A auditoria acessou elenco e
 perfil de jogador, mas não encontrou escalações/eventos nas partidas expandidas de
 BSA 2025. Impacto individual e minutos permanecem adiados, sem alterar o modelo.
@@ -124,6 +128,28 @@ métricas por 90 e ajustes de probabilidade permanecem nulos nesta entrega.
 
 Consulte a [auditoria de contexto](docs/experiments/context-coverage-bsa.md) para os
 dados encontrados, os limites e os itens adiados à fase 7.
+
+## Cotações e carteira virtual
+
+```bash
+uv run sports-stats-analyzer forecast ID_DA_PARTIDA
+uv run sports-stats-analyzer odds-import data/odds.csv
+uv run sports-stats-analyzer odds-assess ID_DA_COTACAO ID_DA_PREVISAO
+uv run sports-stats-analyzer paper-bet ID_DA_COTACAO ID_DA_PREVISAO
+uv run sports-stats-analyzer paper-settle
+uv run sports-stats-analyzer paper-wallet
+```
+
+Substitua os IDs pelos valores do banco e retornados pelos comandos. Antes de
+prever ou liquidar, atualize e normalize resultados/agenda. O comando `odds-add`
+também aceita observação manual; consulte `--help` e o [template CSV](examples/odds-template.csv).
+
+Somente odds observadas nos últimos 15 minutos; previsões novas e prospectivas.
+Carteira começa com 100 unidades virtuais, aposta fixa de uma unidade, exposição
+máxima de cinco e uma aposta por partida. Inicialmente apenas 1X2/BSA é elegível.
+Sem apostas liquidadas, ROI é nulo. Não há acesso a casas ou movimentação de dinheiro.
+
+Leia as [regras da carteira](docs/paper-trading.md) e a [validação da fase 5](docs/experiments/phase-5-validation.md).
 
 ## Verificar
 

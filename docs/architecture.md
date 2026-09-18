@@ -15,6 +15,12 @@ modelos e avaliação temporal locais. Planejado: Streamlit para
 o painel da fase 6. FastAPI e PostgreSQL só se o uso multiusuário justificar.
 Não instalar antecipadamente uma stack de serviços distribuídos.
 
+Fase 5: `markets.py` usa Decimal para odds e valores da carteira, CSV da biblioteca
+padrão e persistência SQLite aditiva (migração 2). Previsões prospectivas guardam
+parâmetros e revisões de treino; odds guardam observação e recebimento local.
+Limites, reservas e liquidação da carteira virtual usam transações de escrita.
+Nenhuma dependência adicional nem segunda API foi necessária.
+
 ## Fluxo atual
 
 CLI valida argumentos → Settings carrega configuração → adaptador consulta API →

@@ -219,3 +219,89 @@ def player_report(
     except ValueError:
         raise typer.BadParameter("--before deve ser ISO 8601 com fuso") from None
     local_report(player_context, player_id=player_id, before=cutoff)
+
+
+@app.command()
+def forecast(match_id: Annotated[int, typer.Argument(min=1)]) -> None:
+    """Registra previsão experimental agora, apenas para acompanhamento virtual BSA."""
+    from sports_stats_analyzer.markets import create_forecast
+
+    local_report(create_forecast, match_id=match_id)
+
+
+@app.command()
+def odds_import(
+    path: Annotated[str, typer.Argument(help="CSV UTF-8 de cotações recentes")],
+) -> None:
+    """Importa CSV atomicamente, sem simular cotações históricas."""
+    from pathlib import Path
+
+    from sports_stats_analyzer.markets import import_csv
+
+    local_report(import_csv, path=Path(path))
+
+
+@app.command()
+def odds_add(
+    match_id: Annotated[int, typer.Option(min=1)],
+    market: Annotated[str, typer.Option()],
+    selection: Annotated[str, typer.Option()],
+    odds: Annotated[str, typer.Option()],
+    bookmaker: Annotated[str, typer.Option()],
+    observed_at: Annotated[str, typer.Option()],
+    source: Annotated[str, typer.Option()],
+    line: str | None = None,
+) -> None:
+    """Registra cotação manual recente, sem executar uma aposta."""
+    from sports_stats_analyzer.markets import Quote, import_quotes
+
+    try:
+        quote = Quote.model_validate(
+            {
+                "match_id": match_id,
+                "market": market,
+                "selection": selection,
+                "odds": odds,
+                "bookmaker": bookmaker,
+                "observed_at": observed_at,
+                "source": source,
+                "line": line,
+            }
+        )
+    except ValidationError:
+        raise typer.BadParameter(
+            "Cotação inválida: confira mercado, seleção, linha, odd e horário com fuso"
+        ) from None
+    local_report(import_quotes, quotes=[quote])
+
+
+@app.command()
+def odds_assess(quote_id: str, forecast_id: str) -> None:
+    """Avalia uma cotação no instante atual, permitindo abstenção."""
+    from sports_stats_analyzer.markets import assess
+
+    local_report(assess, quote_id=quote_id, forecast_id=forecast_id)
+
+
+@app.command()
+def paper_bet(quote_id: str, forecast_id: str) -> None:
+    """Reserva uma unidade virtual, se critérios e limites forem atendidos."""
+    from sports_stats_analyzer.markets import place_bet
+
+    local_report(place_bet, quote_id=quote_id, forecast_id=forecast_id)
+
+
+@app.command()
+def paper_settle() -> None:
+    """Liquida apostas virtuais com os resultados já coletados e normalizados."""
+    from sports_stats_analyzer.markets import settle
+
+    local_report(settle)
+
+
+@app.command()
+def paper_wallet() -> None:
+    """Exibe saldo virtual, exposição, retorno e incerteza da amostra."""
+    from sports_stats_analyzer.markets import wallet
+
+    local_report(wallet)
