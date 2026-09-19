@@ -186,6 +186,8 @@ as limitações; os dados extraídos ainda não alimentam previsões.
 `cbf-team-links --season 2026` propõe vínculos de clubes da Série A com IDs BSA,
 usando jogos observados; o [estudo local](docs/experiments/cbf-bsa-2026-links.md)
 documenta 20 candidatos e uma divergência de horário, sem fusão de cadastros.
+O [inventário da fase 7](docs/experiments/phase-7-gap-inventory.md) prioriza as
+lacunas de dados e as verificações necessárias antes de escolher uma nova fonte.
 
 ## Cotações e carteira virtual
 

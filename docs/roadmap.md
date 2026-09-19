@@ -40,6 +40,8 @@ Dois PDFs locais passaram por extração piloto de escalações e substituiçõe
 vínculos candidatos de clubes entre CBF/Série A e football-data.org/BSA foram
 apoiados por 267 jogos, com uma divergência de horário preservada. Nenhum desses
 dados altera o modelo.
+O inventário de lacunas da fase 7 foi priorizado; não há seleção de segunda fonte
+sem verificar acesso, cobertura histórica e condições de uso.
 A fase 5 entregou previsões prospectivas,
 odds manuais/CSV e carteira virtual, ainda sem apostas reais observadas.
 A auditoria da fase 4 encontrou
