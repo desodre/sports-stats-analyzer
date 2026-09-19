@@ -163,6 +163,20 @@ def cbf_match_urls(
     typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
 
 
+@app.command()
+def cbf_sumula_extract(document_id: Annotated[int, typer.Argument(min=1)]) -> None:
+    """Extrai escalação, substituições e minutos nominais de uma súmula CBF local."""
+    from sports_stats_analyzer.cbf_sumulas import SumulaParseError, extract_stored_sumula
+
+    try:
+        settings = Settings()
+        result = extract_stored_sumula(settings.sports_database_path, document_id)
+    except (SumulaParseError, sqlite3.Error, OSError, ValidationError) as error:
+        typer.echo(f"Falha na extração da súmula CBF: {error}", err=True)
+        raise typer.Exit(1) from None
+    typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
+
+
 class Resource(StrEnum):
     competitions = "competitions"
     matches = "matches"

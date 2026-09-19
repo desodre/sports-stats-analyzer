@@ -179,6 +179,10 @@ uv run sports-stats-analyzer cbf-match-urls --season 2026 \
 
 O [catálogo de 2026](docs/experiments/cbf-2026-match-catalog.md) mediu 1.508 URLs
 distintas; não comprova calendário completo ou disponibilidade de todas as súmulas.
+Com Poppler instalado, `cbf-sumula-extract ID` lê uma súmula local e retorna
+escalações, substituições e minutos nominais. O
+[piloto de dois PDFs](docs/experiments/cbf-sumula-pilot.md) descreve a validação e
+as limitações; os dados extraídos ainda não alimentam previsões.
 
 ## Cotações e carteira virtual
 

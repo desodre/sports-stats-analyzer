@@ -28,6 +28,8 @@ isolados não fornecem suporte para essas implementações.
 - [ ] Após concluir 2026, coletar e auditar as temporadas de 2023–2025 no mesmo escopo.
 - [ ] Descobrir/cadastrar URLs de jogos em escala e medir cobertura por temporada.
 - [ ] Extrair e revisar escalações, substituições e minutos das súmulas.
+- [x] Validar um extrator conservador em duas súmulas locais, com IDs CBF,
+  titularidade, substituições e minutos nominais, sem integração ao modelo.
 - [ ] Conciliar IDs CBF com o cadastro local e preservar ambiguidades.
 - [ ] Inventariar lacunas: notícias, lesões, xG, eventos, pressão ou odds históricas.
 - [ ] Priorizar cada lacuna por benefício testável, cobertura, custo e licença.
@@ -52,6 +54,9 @@ auditar cobertura e integridade antes de prosseguir; as abas históricas ainda f
 O [catálogo local de jogos de 2026](../experiments/cbf-2026-match-catalog.md)
 deduplicou 1.508 URLs e mediu a cobertura de históricos das cinco competições.
 O mesmo comando servirá aos anos históricos quando as abas estiverem coletadas.
+O [piloto de súmulas](../experiments/cbf-sumula-pilot.md) extraiu e revisou dois
+PDFs com 46 atletas e 10 substituições cada. A ampliação da amostra e a conciliação
+com partidas e outros provedores ainda são necessárias.
 
 O teste de ausência de entrada do comando `cbf-collect` valida a mensagem de
 erro na própria regra e o código de saída da CLI. A saída formatada pelo Rich

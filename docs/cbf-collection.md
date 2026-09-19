@@ -144,6 +144,21 @@ súmula; nesse caso, use URLs selecionadas ou um lote menor após revisar a pág
 A [medição de 2026](experiments/cbf-2026-match-catalog.md) registra 1.508 URLs e
 uma referência presente em apenas um histórico.
 
+## Extração piloto de súmulas armazenadas
+
+Com `pdftotext` do Poppler instalado, é possível extrair os IDs CBF, camisas,
+titularidade, substituições e minutos nominais de uma súmula já salva:
+
+```bash
+uv run sports-stats-analyzer cbf-sumula-extract 1
+```
+
+O argumento é o ID de `cbf_sumulas`, não o número do jogo no PDF. O comando confere
+o hash antes da leitura e retorna JSON sem gravar no banco. Recusa layouts e
+cronologias não reconhecidos e partidas com expulsões, pois os minutos precisariam
+de regras adicionais. Os nomes visivelmente truncados nas tabelas não são usados
+como identidade. Veja o [piloto de dois documentos](experiments/cbf-sumula-pilot.md).
+
 A execução integral de 2026 foi feita como unidade temporária do `systemd --user`;
 em 19/09/2026, a unidade estava inativa com `Result=success` e código de saída 0:
 

@@ -21,6 +21,12 @@ parâmetros e revisões de treino; odds guardam observação e recebimento local
 Limites, reservas e liquidação da carteira virtual usam transações de escrita.
 Nenhuma dependência adicional nem segunda API foi necessária.
 
+Fase 7 mantém a CBF isolada do modelo: `cbf_team_pages` guarda HTML por hash e
+observações de clubes; `cbf_matches.py` cataloga URLs com proveniência por página;
+`cbf_sumulas.py` lê apenas PDFs locais com hash verificado. A extração posicional
+usa `pdftotext` (Poppler) instalado opcionalmente e recusa layouts desconhecidos.
+IDs CBF ainda não são reconciliados com os IDs da fonte inicial.
+
 ## Fluxo atual
 
 CLI valida argumentos → Settings carrega configuração → adaptador consulta API →
