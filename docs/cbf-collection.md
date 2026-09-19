@@ -99,7 +99,25 @@ e um caso da Série C que ainda exige revisão humana. Consulte
 `cbf-team-coverage` para conferir apenas a presença das abas. Uma interrupção em
 uma nova coleta não exige reiniciar do zero.
 Por decisão do responsável, a coleta de 2023–2025 nessas mesmas competições é a
-segunda etapa, após concluir e auditar 2026; não começou neste lote.
+segunda etapa, após concluir e auditar 2026. A revisão dirigida foi registrada em
+[auditoria de 2026](experiments/cbf-2026-audit.md). Os 15 índices de 2023–2025 já
+foram baixados, mas as abas desses anos ainda precisam de coleta e auditoria. São
+220 participações em 2023, 219 em 2024 e 221 em 2025, conforme os índices do site;
+IDs com nomes parecidos são mantidos separados.
+
+Para completar a etapa histórica na ordem 2023 → 2024 → 2025:
+
+```bash
+sh scripts/collect_cbf_history.sh
+```
+
+O script usa o mesmo lock de cota, retoma abas já armazenadas e grava relatórios em
+`data/cbf/audits/`. Só avança para o próximo ano quando todas as abas e índices do
+ano atual estão presentes e os arquivos passam na verificação de integridade.
+Sinais de conteúdo vazio e candidatos de identidade continuam no relatório para
+revisão, sem fusão automática. A coleta completa exige milhares de requisições e
+várias horas; mantenha uma sessão ativa e não rode outra varredura em paralelo.
+Se houver falha ou interrupção, execute o mesmo comando novamente.
 
 A execução integral de 2026 foi feita como unidade temporária do `systemd --user`;
 em 19/09/2026, a unidade estava inativa com `Result=success` e código de saída 0:

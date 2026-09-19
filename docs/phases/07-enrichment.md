@@ -46,6 +46,9 @@ confirmou que o vazio do primeiro ID está no HTML de origem e verificou 15 pág
 de amostra; nenhum ID foi fundido. A
 [hipótese de vídeo](../experiments/full-match-video.md) está registrada para pesquisa
 futura; não há ingestão ou treinamento de vídeo nesta etapa.
+Os 15 índices de 2023–2025 foram coletados. A
+[rotina sequencial](../cbf-collection.md) está pronta para retomar as abas por ano e
+auditar cobertura e integridade antes de prosseguir; as abas históricas ainda faltam.
 
 O teste de ausência de entrada do comando `cbf-collect` valida a mensagem de
 erro na própria regra e o código de saída da CLI. A saída formatada pelo Rich
