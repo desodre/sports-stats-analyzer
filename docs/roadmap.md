@@ -16,7 +16,7 @@ Nenhuma segunda API será integrada nesta etapa.
 | [4 — Escalações e contexto](phases/04-context.md) | Auditoria, elencos e contexto observado | Implementada no escopo disponível; efeitos individuais adiados |
 | [5 — Avaliação de mercados](phases/05-markets.md) | Cotações, valor esperado e carteira virtual prospectiva | Implementada; rentabilidade ainda não validada |
 | [6 — Produto e operação](phases/06-product.md) | Painel local, atualização, monitoramento e backup | Implementada; primeira CI remota depende de push |
-| [7 — Enriquecimento](phases/07-enrichment.md) | Auditoria CBF e estudo de novas fontes | Iniciada; revisão de identidades pendente |
+| [7 — Enriquecimento](phases/07-enrichment.md) | Auditoria CBF e estudo de novas fontes | Em andamento; revisão dirigida de 2026 concluída, identidade ambígua preservada |
 
 ## Ordem e decisões
 
@@ -30,8 +30,9 @@ Coleta ampliada para BSA 2023–2025: 1.140 resultados. Fase 3 concluída com ev
 favorável para 1X2 em teste retrospectivo, sem comprovação financeira. Próximo marco
 do roteiro: decisões da fase 7 sobre enriquecimento, caso necessário. Painel local,
 atualização, backup e workflow de CI para GitHub foram entregues. A fase 7 começou
-com coleta CBF e auditoria automatizada de 2026; revisão humana precede a coleta
-histórica. A análise de partidas completas em vídeo foi registrada como hipótese
+com coleta CBF e auditoria automatizada de 2026; a revisão dirigida dos HTML confirmou
+o conteúdo vazio de um dos IDs do Ituano e preservou a ambiguidade. A coleta histórica
+é o próximo passo. A análise de partidas completas em vídeo foi registrada como hipótese
 futura, condicionada a direitos de uso, qualidade da extração e validação temporal.
 A fase 5 entregou previsões prospectivas,
 odds manuais/CSV e carteira virtual, ainda sem apostas reais observadas.

@@ -1,11 +1,12 @@
 # Fase 7 — Notícias e enriquecimento futuro
 
-Estado: coleta exploratória e primeira auditoria automatizada das páginas de clubes
-CBF iniciadas; revisão de identidades, enriquecimento estatístico e integração ao
-modelo continuam pendentes.
+Estado: coleta exploratória, auditoria automatizada e revisão dirigida das páginas
+de clubes CBF de 2026 concluídas. Conciliação definitiva de identidades,
+enriquecimento estatístico e integração ao modelo continuam pendentes.
 O lote integral de páginas dos clubes de 2026 terminou: os cinco índices e as
 849 abas previstas estão armazenados. A auditoria automatizada verificou cobertura,
-estrutura e integridade; a revisão humana dos casos sinalizados ainda falta.
+estrutura e integridade; a revisão dirigida confirmou o conteúdo dos casos
+sinalizados, mas não resolveu a relação entre os IDs do Ituano.
 Depende de lacunas demonstradas pelas fases anteriores e escolha futura de fontes.
 
 Lacuna demonstrada na fase 4: BSA 2025 não retornou escalações, bancos ou eventos
@@ -22,7 +23,8 @@ isolados não fornecem suporte para essas implementações.
 - [x] Concluir a coleta das abas de 2026 nas cinco competições (283 participações).
 - [x] Implementar e executar auditoria automatizada de cobertura, conteúdo,
   integridade e candidatos de identidade nas páginas de 2026.
-- [ ] Revisar identidades e amostras de conteúdo sinalizadas na auditoria de 2026.
+- [x] Revisar os HTML dos IDs sinalizados e uma amostra das cinco competições,
+  preservando a ambiguidade de identidade não resolvida.
 - [ ] Após concluir 2026, coletar e auditar as temporadas de 2023–2025 no mesmo escopo.
 - [ ] Descobrir/cadastrar URLs de jogos em escala e medir cobertura por temporada.
 - [ ] Extrair e revisar escalações, substituições e minutos das súmulas.
@@ -38,9 +40,12 @@ isolados não fornecem suporte para essas implementações.
 
 A [auditoria inicial de 2026](../experiments/cbf-2026-audit.md) registrou 854 HTML
 íntegros, 849 abas presentes, três sinais de conteúdo incompleto no ID `20281` e
-um candidato de identidade entre `20281` e `64742` na Série C/SP. Nenhum ID foi
-fundido. A [hipótese de vídeo](../experiments/full-match-video.md) está registrada
-para pesquisa futura; não há ingestão ou treinamento de vídeo nesta etapa.
+um candidato de identidade entre `20281` e `64742` na Série C/SP. A
+[revisão dirigida](../experiments/cbf-2026-audit.md)
+confirmou que o vazio do primeiro ID está no HTML de origem e verificou 15 páginas
+de amostra; nenhum ID foi fundido. A
+[hipótese de vídeo](../experiments/full-match-video.md) está registrada para pesquisa
+futura; não há ingestão ou treinamento de vídeo nesta etapa.
 
 O teste de ausência de entrada do comando `cbf-collect` valida a mensagem de
 erro na própria regra e o código de saída da CLI. A saída formatada pelo Rich
