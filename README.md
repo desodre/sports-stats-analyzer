@@ -1,8 +1,9 @@
 # Sports Stats Analyzer
 
 Projeto Python para análise estatística de futebol, com probabilidades auditáveis,
-validação temporal e comunicação de incerteza. Fonte inicial exclusiva:
-[football-data.org](https://www.football-data.org/).
+validação temporal e comunicação de incerteza. Fonte inicial de partidas:
+[football-data.org](https://www.football-data.org/). A coleta experimental de
+súmulas da CBF é separada e ainda não alimenta o modelo.
 
 ## Estado atual
 
@@ -130,6 +131,22 @@ métricas por 90 e ajustes de probabilidade permanecem nulos nesta entrega.
 
 Consulte a [auditoria de contexto](docs/experiments/context-coverage-bsa.md) para os
 dados encontrados, os limites e os itens adiados à fase 7.
+
+## Súmulas da CBF
+
+Para baixar uma súmula conhecida, sem token de API:
+
+```bash
+uv run sports-stats-analyzer cbf-collect --url https://conteudo.cbf.com.br/sumulas/2026/142269se.pdf
+```
+
+Também é possível passar uma página de jogo da Série A com `--url` ou várias URLs
+em `--urls-file` (uma por linha). A descoberta automática de todos os jogos ainda
+não foi implementada. Páginas e PDFs compartilham um limite conservador de uma
+requisição a cada 31 segundos, no máximo dez em qualquer período de cinco minutos.
+Arquivos válidos ficam em `data/cbf/`, ignorados pelo Git; metadados e hash ficam
+em `cbf_sumulas` no SQLite. Reexecução pula PDFs já armazenados, salvo `--refresh`.
+Veja [coleta e limitações](docs/cbf-collection.md) antes de processar lotes maiores.
 
 ## Cotações e carteira virtual
 

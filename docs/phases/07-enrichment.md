@@ -1,6 +1,7 @@
 # Fase 7 — Notícias e enriquecimento futuro
 
-Estado: adiada por decisão de usar somente football-data.org inicialmente.
+Estado: iniciada a coleta exploratória de súmulas CBF; enriquecimento estatístico
+e integração ao modelo continuam pendentes.
 Depende de lacunas demonstradas pelas fases anteriores e escolha futura de fontes.
 
 Lacuna demonstrada na fase 4: BSA 2025 não retornou escalações, bancos ou eventos
@@ -10,6 +11,11 @@ isolados não fornecem suporte para essas implementações.
 
 ## Plano de decisão
 
+- [x] Iniciar adaptação separada da CBF para baixar súmulas com proveniência,
+  integridade, retomada e cota conservadora; sem alterar o modelo.
+- [ ] Descobrir/cadastrar URLs de jogos em escala e medir cobertura por temporada.
+- [ ] Extrair e revisar escalações, substituições e minutos das súmulas.
+- [ ] Conciliar IDs CBF com o cadastro local e preservar ambiguidades.
 - [ ] Inventariar lacunas: notícias, lesões, xG, eventos, pressão ou odds históricas.
 - [ ] Priorizar cada lacuna por benefício testável, cobertura, custo e licença.
 - [ ] Escolher fonte somente quando houver necessidade concreta e viabilidade.
@@ -37,4 +43,6 @@ antes de misturar métricas com metodologias diferentes.
 Nova fonte resolve lacuna explicitamente registrada, com contrato de uso compatível,
 identidades conciliadas e evidência de qualidade. Feature que não melhora previsão
 pode permanecer informativa, mas não alterar probabilidades sem suporte empírico.
-Nenhuma segunda API, modelo de linguagem ou assinatura foi implementada nesta entrega.
+Nenhuma segunda API paga, modelo de linguagem ou assinatura foi implementada.
+As súmulas baixadas são documentos pós-jogo; não devem ser usadas como informação
+pré-jogo em avaliações históricas sem um horário de disponibilidade comprovado.

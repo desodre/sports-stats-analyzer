@@ -5,8 +5,10 @@ import re
 import sqlite3
 from datetime import UTC, datetime
 from enum import StrEnum
+from pathlib import Path
 from typing import Annotated
 
+import httpx
 import typer
 from pydantic import ValidationError
 
@@ -17,6 +19,42 @@ from sports_stats_analyzer.providers.football_data import FootballDataClient, Pr
 from sports_stats_analyzer.storage import save_snapshot
 
 app = typer.Typer(help="Coleta auditável de futebol. Não produz recomendações de apostas.")
+
+
+@app.command()
+def cbf_collect(
+    url: Annotated[
+        list[str] | None,
+        typer.Option(help="URL de jogo da Série A ou de súmula; opção repetível."),
+    ] = None,
+    urls_file: Annotated[
+        Path | None, typer.Option(help="Arquivo UTF-8 com uma URL por linha; # inicia comentário.")
+    ] = None,
+    max_documents: Annotated[int, typer.Option(min=1, max=1000)] = 10,
+    refresh: bool = False,
+) -> None:
+    """Baixa súmulas CBF; todas as requisições são espaçadas em pelo menos 31 s."""
+    from sports_stats_analyzer.providers.cbf import CBFCollector, CBFError
+
+    urls = list(url or [])
+    try:
+        if urls_file is not None:
+            urls.extend(
+                line.strip()
+                for line in urls_file.read_text(encoding="utf-8").splitlines()
+                if line.strip() and not line.lstrip().startswith("#")
+            )
+        if not urls:
+            raise typer.BadParameter("Informe --url ou --urls-file")
+        settings = Settings()
+        with CBFCollector(
+            settings.sports_database_path, settings.sports_rate_limit_dir
+        ) as collector:
+            result = collector.collect(urls, max_documents=max_documents, refresh=refresh)
+    except (CBFError, httpx.HTTPError, sqlite3.Error, OSError, ValidationError) as error:
+        typer.echo(f"Falha na coleta CBF: {error}", err=True)
+        raise typer.Exit(1) from None
+    typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
 
 
 class Resource(StrEnum):

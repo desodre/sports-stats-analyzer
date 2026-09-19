@@ -60,3 +60,9 @@ ou confirmação oficial. Elenco é retrato da fonte, não comprovação de vín
 
 Ver [auditoria detalhada](../experiments/context-coverage-bsa.md).
 Verificação: 65 testes aprovados, incluindo 15 novos de contexto; lint e formato aprovados.
+
+Atualização de 19/09/2026: iniciou-se a coleta separada e limitada de súmulas CBF
+como fonte potencial de escalações e substituições. Dois PDFs reais, de 2025 e 2026,
+foram baixados, validados e registrados com hash. Não há ainda extração estruturada,
+conciliação de IDs ou métricas de minutos; os quatro itens adiados permanecem abertos. Consulte
+[o procedimento da coleta](../cbf-collection.md).
