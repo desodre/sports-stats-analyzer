@@ -115,6 +115,22 @@ def cbf_team_coverage(
     typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
 
 
+@app.command()
+def cbf_team_audit(
+    season: Annotated[int | None, typer.Option(min=2000, max=2100)] = None,
+) -> None:
+    """Audita cobertura, conteúdo, integridade e possíveis IDs duplicados da CBF."""
+    from sports_stats_analyzer.cbf_audit import audit_team_pages
+
+    try:
+        settings = Settings()
+        result = audit_team_pages(settings.sports_database_path, season or datetime.now(UTC).year)
+    except (ValueError, sqlite3.Error, OSError, ValidationError) as error:
+        typer.echo(f"Falha na auditoria de clubes CBF: {error}", err=True)
+        raise typer.Exit(1) from None
+    typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
+
+
 class Resource(StrEnum):
     competitions = "competitions"
     matches = "matches"

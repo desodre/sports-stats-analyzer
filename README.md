@@ -157,10 +157,15 @@ histórico de partidas e estatísticas agregadas, sem misturar esses dados com o
 SPORTS_CBF_CA_BUNDLE=data/cbf/certs/sectigo-ov-bundle.crt \
   uv run sports-stats-analyzer cbf-teams --season 2026 --max-requests 20
 uv run sports-stats-analyzer cbf-team-coverage --season 2026
+uv run sports-stats-analyzer cbf-team-audit --season 2026
 ```
 
 Repita o primeiro comando para continuar de onde parou. Veja no procedimento da
 coleta como obter o pacote público de certificados exigido pelo domínio da CBF.
+A [auditoria inicial de 2026](docs/experiments/cbf-2026-audit.md) registra a
+cobertura e as ambiguidades que ainda exigem revisão. A proposta de analisar
+[partidas completas em vídeo](docs/experiments/full-match-video.md) foi guardada
+como pesquisa futura, sem alterar as previsões atuais.
 
 ## Cotações e carteira virtual
 

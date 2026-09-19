@@ -76,6 +76,7 @@ valide-o novamente com a documentação oficial da Sectigo.
 SPORTS_CBF_CA_BUNDLE=data/cbf/certs/sectigo-ov-bundle.crt \
   uv run sports-stats-analyzer cbf-teams --season 2026 --max-requests 20
 uv run sports-stats-analyzer cbf-team-coverage --season 2026
+uv run sports-stats-analyzer cbf-team-audit --season 2026
 ```
 
 O primeiro comando começa pelos cinco índices, depois coleta as três abas de cada
@@ -91,8 +92,11 @@ para Séries A–D e Copa do Brasil; são 171 IDs únicos entre competições. E
 representam o site observado, não uma validação independente dos participantes.
 São 283 participações e 849 páginas de abas, além dos cinco índices. A coleta
 integral de 2026 terminou com cobertura registrada para as três abas de todas
-as participações; isso não substitui a auditoria de identidades ou do conteúdo.
-Consulte `cbf-team-coverage` para conferir o banco local. Uma interrupção em
+as participações. `cbf-team-audit` confere também os arquivos HTML, a estrutura
+do conteúdo e candidatos de identidade, sem novas requisições ou fusão de IDs.
+A [auditoria inicial](experiments/cbf-2026-audit.md) encontrou páginas íntegras
+e um caso da Série C que ainda exige revisão humana. Consulte
+`cbf-team-coverage` para conferir apenas a presença das abas. Uma interrupção em
 uma nova coleta não exige reiniciar do zero.
 Por decisão do responsável, a coleta de 2023–2025 nessas mesmas competições é a
 segunda etapa, após concluir e auditar 2026; não começou neste lote.

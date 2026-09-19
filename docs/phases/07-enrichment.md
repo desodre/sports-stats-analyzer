@@ -1,10 +1,11 @@
 # Fase 7 — Notícias e enriquecimento futuro
 
-Estado: iniciada a coleta exploratória de súmulas e páginas de clubes CBF; enriquecimento estatístico
-e integração ao modelo continuam pendentes.
+Estado: coleta exploratória e primeira auditoria automatizada das páginas de clubes
+CBF iniciadas; revisão de identidades, enriquecimento estatístico e integração ao
+modelo continuam pendentes.
 O lote integral de páginas dos clubes de 2026 terminou: os cinco índices e as
-849 abas previstas estão armazenados. A auditoria de identidades e qualidade
-dos dados ainda não foi concluída.
+849 abas previstas estão armazenados. A auditoria automatizada verificou cobertura,
+estrutura e integridade; a revisão humana dos casos sinalizados ainda falta.
 Depende de lacunas demonstradas pelas fases anteriores e escolha futura de fontes.
 
 Lacuna demonstrada na fase 4: BSA 2025 não retornou escalações, bancos ou eventos
@@ -19,7 +20,9 @@ isolados não fornecem suporte para essas implementações.
 - [x] Implementar coleta retomável de índices e abas de clubes das Séries A–D e
   Copa do Brasil masculina/2026, com HTML bruto e observação temporal separada.
 - [x] Concluir a coleta das abas de 2026 nas cinco competições (283 participações).
-- [ ] Auditar identidades, cobertura semântica e duplicidades nas páginas de 2026.
+- [x] Implementar e executar auditoria automatizada de cobertura, conteúdo,
+  integridade e candidatos de identidade nas páginas de 2026.
+- [ ] Revisar identidades e amostras de conteúdo sinalizadas na auditoria de 2026.
 - [ ] Após concluir 2026, coletar e auditar as temporadas de 2023–2025 no mesmo escopo.
 - [ ] Descobrir/cadastrar URLs de jogos em escala e medir cobertura por temporada.
 - [ ] Extrair e revisar escalações, substituições e minutos das súmulas.
@@ -30,6 +33,14 @@ isolados não fornecem suporte para essas implementações.
 - [ ] Definir mapeamento de IDs entre provedores com rastreabilidade e revisão de ambiguidades.
 - [ ] Implementar um adaptador por fonte e contrato normalizado comum.
 - [ ] Avaliar contribuição incremental com o mesmo protocolo temporal da fase 3.
+- [ ] Avaliar piloto de vídeo de partidas completas para estratégias de equipes e
+  tendências de jogadores/treinadores, condicionado a direitos de uso e qualidade.
+
+A [auditoria inicial de 2026](../experiments/cbf-2026-audit.md) registrou 854 HTML
+íntegros, 849 abas presentes, três sinais de conteúdo incompleto no ID `20281` e
+um candidato de identidade entre `20281` e `64742` na Série C/SP. Nenhum ID foi
+fundido. A [hipótese de vídeo](../experiments/full-match-video.md) está registrada
+para pesquisa futura; não há ingestão ou treinamento de vídeo nesta etapa.
 
 O teste de ausência de entrada do comando `cbf-collect` valida a mensagem de
 erro na própria regra e o código de saída da CLI. A saída formatada pelo Rich
