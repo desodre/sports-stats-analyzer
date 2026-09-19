@@ -66,3 +66,8 @@ como fonte potencial de escalações e substituições. Dois PDFs reais, de 2025
 foram baixados, validados e registrados com hash. Não há ainda extração estruturada,
 conciliação de IDs ou métricas de minutos; os quatro itens adiados permanecem abertos. Consulte
 [o procedimento da coleta](../cbf-collection.md).
+
+Atualização adicional de 19/09/2026: índices e páginas de clubes CBF passam a
+fornecer listas de atletas, jogos e estatísticas agregadas por temporada/competição.
+Essas listas não são escalações confirmadas e os totais atuais não são observações
+históricas pré-jogo. A coleta não libera os quatro itens estatísticos adiados.

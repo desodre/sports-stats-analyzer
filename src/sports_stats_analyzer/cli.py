@@ -25,15 +25,17 @@ app = typer.Typer(help="Coleta auditável de futebol. Não produz recomendaçõe
 def cbf_collect(
     url: Annotated[
         list[str] | None,
-        typer.Option(help="URL de jogo da Série A ou de súmula; opção repetível."),
+        typer.Option(
+            help="URL de jogo das competições selecionadas ou de súmula; opção repetível."
+        ),
     ] = None,
     urls_file: Annotated[
         Path | None, typer.Option(help="Arquivo UTF-8 com uma URL por linha; # inicia comentário.")
     ] = None,
-    max_documents: Annotated[int, typer.Option(min=1, max=1000)] = 10,
+    max_documents: Annotated[int, typer.Option(min=1, max=1000)] = 20,
     refresh: bool = False,
 ) -> None:
-    """Baixa súmulas CBF; todas as requisições são espaçadas em pelo menos 31 s."""
+    """Baixa súmulas CBF; todas as requisições são espaçadas em pelo menos 15,1 s."""
     from sports_stats_analyzer.providers.cbf import CBFCollector, CBFError
 
     urls = list(url or [])
@@ -48,11 +50,67 @@ def cbf_collect(
             raise typer.BadParameter("Informe --url ou --urls-file")
         settings = Settings()
         with CBFCollector(
-            settings.sports_database_path, settings.sports_rate_limit_dir
+            settings.sports_database_path,
+            settings.sports_rate_limit_dir,
+            ca_bundle=settings.sports_cbf_ca_bundle,
         ) as collector:
             result = collector.collect(urls, max_documents=max_documents, refresh=refresh)
     except (CBFError, httpx.HTTPError, sqlite3.Error, OSError, ValidationError) as error:
         typer.echo(f"Falha na coleta CBF: {error}", err=True)
+        raise typer.Exit(1) from None
+    typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
+
+
+@app.command()
+def cbf_teams(
+    competition: Annotated[
+        list[str] | None,
+        typer.Option(help="Competição repetível; padrão: Séries A–D e Copa do Brasil."),
+    ] = None,
+    season: Annotated[int | None, typer.Option(min=2000, max=2100)] = None,
+    max_requests: Annotated[int, typer.Option(min=1, max=10000)] = 20,
+    refresh: bool = False,
+    progress: bool = False,
+) -> None:
+    """Coleta clubes, atletas listados, jogos e estatísticas da CBF, com retomada."""
+    from sports_stats_analyzer.providers.cbf import CBFError
+    from sports_stats_analyzer.providers.cbf_teams import COMPETITIONS, CBFTeamCollector
+
+    selected = competition or list(COMPETITIONS)
+    try:
+        settings = Settings()
+        with CBFTeamCollector(
+            settings.sports_database_path,
+            settings.sports_rate_limit_dir,
+            ca_bundle=settings.sports_cbf_ca_bundle,
+        ) as collector:
+            result = collector.collect_teams(
+                selected,
+                season or datetime.now(UTC).year,
+                max_requests=max_requests,
+                refresh=refresh,
+                progress=(lambda event: typer.echo(json.dumps(event, ensure_ascii=False)))
+                if progress
+                else None,
+            )
+    except (CBFError, httpx.HTTPError, sqlite3.Error, OSError, ValidationError) as error:
+        typer.echo(f"Falha na coleta de clubes CBF: {error}", err=True)
+        raise typer.Exit(1) from None
+    typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
+
+
+@app.command()
+def cbf_team_coverage(
+    season: Annotated[int | None, typer.Option(min=2000, max=2100)] = None,
+) -> None:
+    """Mostra quantos clubes têm cada aba CBF coletada na temporada."""
+    from sports_stats_analyzer.providers.cbf_teams import team_coverage
+
+    try:
+        settings = Settings()
+        result = team_coverage(settings.sports_database_path, season or datetime.now(UTC).year)
+    except (sqlite3.Error, OSError, ValidationError) as error:
+        typer.echo(f"Falha ao consultar cobertura CBF: {error}", err=True)
         raise typer.Exit(1) from None
     typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
 

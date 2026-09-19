@@ -1,4 +1,4 @@
-"""Coleta conservadora e retomável de súmulas públicas da Série A na CBF."""
+"""Coleta conservadora e retomável de súmulas públicas das competições CBF selecionadas."""
 
 import fcntl
 import hashlib
@@ -6,6 +6,7 @@ import html
 import os
 import re
 import sqlite3
+import ssl
 import tempfile
 import time
 from datetime import UTC, datetime
@@ -15,7 +16,9 @@ from urllib.parse import urlparse, urlunparse
 
 import httpx
 
-PAGE_PATH = re.compile(r"/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/(20\d{2})/.+")
+COMPETITION_PATH = r"(?:campeonato-brasileiro/serie-[abcd]|copa-do-brasil/masculino)"
+PAGE_PATH = re.compile(rf"/futebol-brasileiro/jogos/{COMPETITION_PATH}/(20\d{{2}})/.+")
+TEAM_PATH = re.compile(rf"/futebol-brasileiro/times/({COMPETITION_PATH})/(20\d{{2}})(?:/(\d+))?")
 PDF_PATH = re.compile(r"/sumulas/(20\d{2})/(\d+se\.pdf)")
 PDF_LINK = re.compile(r"https://conteudo\.cbf\.com\.br/sumulas/20\d{2}/\d+se\.pdf")
 MAX_PDF_BYTES = 10 * 1024 * 1024
@@ -26,10 +29,10 @@ class CBFError(ValueError):
 
 
 class CBFRequestGate:
-    """Um pedido a cada 31 s, inclusive entre processos e após reinícios.
+    """Um pedido a cada 15,1 s, inclusive entre processos e após reinícios.
 
     O instante é gravado antes da requisição. Assim, falhas e interrupções também
-    consomem a cota; 31 s garantem no máximo 10 pedidos em qualquer janela de 5 min.
+    consomem a cota; 15,1 s garantem no máximo 20 pedidos em qualquer janela de 5 min.
     """
 
     def __init__(self, directory: Path):
@@ -46,7 +49,7 @@ class CBFRequestGate:
                 now = time.time()
                 if previous > now + 300:
                     raise CBFError("Relógio local recuou; confira a sincronização antes de coletar")
-                time.sleep(max(0.0, previous + 31.0 - now))
+                time.sleep(max(0.0, previous + 15.1 - now))
                 stream.seek(0)
                 stream.truncate()
                 stream.write(str(time.time()))
@@ -66,9 +69,25 @@ def validate_url(url: str) -> tuple[str, int]:
         raise CBFError("URL deve ser HTTPS da página de jogo ou súmula da CBF")
     if parsed.hostname == "www.cbf.com.br":
         match = PAGE_PATH.fullmatch(parsed.path)
-        if not match or parsed.query not in ("", "view=documentos"):
-            raise CBFError("Página deve ser de jogo da Série A, sem parâmetros extras")
-        return "page", int(match.group(1))
+        if match:
+            if parsed.query not in ("", "view=documentos"):
+                raise CBFError("Página de jogo com parâmetros não permitidos")
+            return "page", int(match.group(1))
+        match = TEAM_PATH.fullmatch(parsed.path)
+        if match:
+            if match.group(3):
+                if parsed.query not in (
+                    "",
+                    "tab=atletas",
+                    "tab=historico-de-partidas",
+                    "tab=estatisticas",
+                ):
+                    raise CBFError("Aba de clube não permitida")
+                return "team_detail", int(match.group(2))
+            if parsed.query:
+                raise CBFError("Índice de clubes não aceita parâmetros")
+            return "team_index", int(match.group(2))
+        raise CBFError("Página deve ser de jogo ou clube das competições permitidas")
     if parsed.hostname == "conteudo.cbf.com.br":
         match = PDF_PATH.fullmatch(parsed.path)
         if not match or parsed.query:
@@ -121,14 +140,26 @@ def _database(connection: sqlite3.Connection) -> None:
 
 class CBFCollector:
     def __init__(
-        self, database_path: Path, rate_limit_dir: Path, client: httpx.Client | None = None
+        self,
+        database_path: Path,
+        rate_limit_dir: Path,
+        client: httpx.Client | None = None,
+        ca_bundle: Path | None = None,
     ):
         self.database_path = database_path
         self.root = database_path.parent / "cbf"
         self.gate = CBFRequestGate(rate_limit_dir)
+        verify: bool | ssl.SSLContext = True
+        if ca_bundle is not None:
+            if not ca_bundle.is_file():
+                raise CBFError(f"Pacote de certificados inexistente: {ca_bundle}")
+            context = ssl.create_default_context()
+            context.load_verify_locations(cafile=str(ca_bundle))
+            verify = context
         self.client = client or httpx.Client(
             timeout=httpx.Timeout(30.0),
             follow_redirects=False,
+            verify=verify,
             headers={"User-Agent": "sports-stats-analyzer/0.1 (authorized CBF research)"},
         )
         self._owns_client = client is None
@@ -177,7 +208,8 @@ class CBFCollector:
         # Validar todas as entradas antes de qualquer contato com o servidor.
         inputs = list(dict.fromkeys(urls))
         for url in inputs:
-            validate_url(url)
+            if validate_url(url)[0] not in ("page", "pdf"):
+                raise CBFError("cbf-collect aceita somente páginas de jogo ou PDFs")
         self.database_path.parent.mkdir(parents=True, exist_ok=True)
         result: dict = {"pages": 0, "downloaded": 0, "skipped": 0, "documents": []}
         with sqlite3.connect(self.database_path) as connection:

@@ -32,7 +32,7 @@ PDF_BODY = b"%PDF-1.4\nfixture\n%%EOF\n"
         "https://conteudo.cbf.com.br/sumulas/2025/142209b.pdf",
         PDF + "?token=x",
         GAME + "?view=documentos&x=1",
-        GAME.replace("/serie-a/", "/serie-b/"),
+        GAME.replace("/serie-a/", "/serie-e/"),
         "https://www.cbf.com.br:invalida/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2025/x",
     ],
 )
@@ -50,6 +50,18 @@ def test_extracts_only_matching_season_sumulas():
     assert sumula_links(page, 2025) == [PDF]
 
 
+def test_requires_existing_ca_bundle_and_keeps_commands_separate(tmp_path):
+    with pytest.raises(CBFError, match="Pacote de certificados inexistente"):
+        CBFCollector(
+            tmp_path / "sports.db", tmp_path / "limits", ca_bundle=tmp_path / "missing.pem"
+        )
+    instance = collector(tmp_path, lambda _: pytest.fail("network"))
+    with pytest.raises(CBFError, match="somente páginas de jogo ou PDFs"):
+        instance.collect(
+            ["https://www.cbf.com.br/futebol-brasileiro/times/campeonato-brasileiro/serie-a/2026"]
+        )
+
+
 def test_gate_persists_before_request_and_spaces_processes(tmp_path, monkeypatch):
     clock = [1_000.0]
     slept = []
@@ -62,8 +74,25 @@ def test_gate_persists_before_request_and_spaces_processes(tmp_path, monkeypatch
     monkeypatch.setattr("sports_stats_analyzer.providers.cbf.time.sleep", sleep)
     CBFRequestGate(tmp_path).acquire()
     CBFRequestGate(tmp_path).acquire()
-    assert slept == [0.0, 31.0]
-    assert float((tmp_path / "cbf-public.lock").read_text()) == 1_031.0
+    assert slept == pytest.approx([0.0, 15.1])
+    assert float((tmp_path / "cbf-public.lock").read_text()) == pytest.approx(1_015.1)
+
+
+def test_gate_never_exceeds_twenty_requests_in_five_minutes(tmp_path, monkeypatch):
+    clock = [10_000.0]
+    issued = []
+
+    def sleep(seconds):
+        clock[0] += seconds
+
+    monkeypatch.setattr("sports_stats_analyzer.providers.cbf.time.time", lambda: clock[0])
+    monkeypatch.setattr("sports_stats_analyzer.providers.cbf.time.sleep", sleep)
+    gate = CBFRequestGate(tmp_path)
+    for _ in range(21):
+        gate.acquire()
+        issued.append(clock[0])
+    assert issued[19] - issued[0] < 300
+    assert issued[20] - issued[0] >= 300
 
 
 def collector(tmp_path: Path, handler) -> CBFCollector:

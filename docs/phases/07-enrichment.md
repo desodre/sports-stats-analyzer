@@ -1,6 +1,6 @@
 # Fase 7 — Notícias e enriquecimento futuro
 
-Estado: iniciada a coleta exploratória de súmulas CBF; enriquecimento estatístico
+Estado: iniciada a coleta exploratória de súmulas e páginas de clubes CBF; enriquecimento estatístico
 e integração ao modelo continuam pendentes.
 Depende de lacunas demonstradas pelas fases anteriores e escolha futura de fontes.
 
@@ -13,6 +13,10 @@ isolados não fornecem suporte para essas implementações.
 
 - [x] Iniciar adaptação separada da CBF para baixar súmulas com proveniência,
   integridade, retomada e cota conservadora; sem alterar o modelo.
+- [x] Implementar coleta retomável de índices e abas de clubes das Séries A–D e
+  Copa do Brasil masculina/2026, com HTML bruto e observação temporal separada.
+- [ ] Concluir todas as abas de todos os clubes e auditar cobertura/duplicidades.
+- [ ] Após concluir 2026, coletar e auditar as temporadas de 2023–2025 no mesmo escopo.
 - [ ] Descobrir/cadastrar URLs de jogos em escala e medir cobertura por temporada.
 - [ ] Extrair e revisar escalações, substituições e minutos das súmulas.
 - [ ] Conciliar IDs CBF com o cadastro local e preservar ambiguidades.

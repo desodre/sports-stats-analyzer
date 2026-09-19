@@ -140,13 +140,27 @@ Para baixar uma súmula conhecida, sem token de API:
 uv run sports-stats-analyzer cbf-collect --url https://conteudo.cbf.com.br/sumulas/2026/142269se.pdf
 ```
 
-Também é possível passar uma página de jogo da Série A com `--url` ou várias URLs
+Também é possível passar uma página de jogo das competições nacionais masculinas
+selecionadas com `--url` ou várias URLs
 em `--urls-file` (uma por linha). A descoberta automática de todos os jogos ainda
 não foi implementada. Páginas e PDFs compartilham um limite conservador de uma
-requisição a cada 31 segundos, no máximo dez em qualquer período de cinco minutos.
+requisição a cada 15,1 segundos, no máximo vinte em qualquer período de cinco minutos.
 Arquivos válidos ficam em `data/cbf/`, ignorados pelo Git; metadados e hash ficam
 em `cbf_sumulas` no SQLite. Reexecução pula PDFs já armazenados, salvo `--refresh`.
 Veja [coleta e limitações](docs/cbf-collection.md) antes de processar lotes maiores.
+
+O comando `cbf-teams` coleta os índices e as abas públicas dos clubes de Série A–D
+e Copa do Brasil, por temporada. Preserva o HTML bruto e extrai atletas listados,
+histórico de partidas e estatísticas agregadas, sem misturar esses dados com o modelo:
+
+```bash
+SPORTS_CBF_CA_BUNDLE=data/cbf/certs/sectigo-ov-bundle.crt \
+  uv run sports-stats-analyzer cbf-teams --season 2026 --max-requests 20
+uv run sports-stats-analyzer cbf-team-coverage --season 2026
+```
+
+Repita o primeiro comando para continuar de onde parou. Veja no procedimento da
+coleta como obter o pacote público de certificados exigido pelo domínio da CBF.
 
 ## Cotações e carteira virtual
 
