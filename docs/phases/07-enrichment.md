@@ -35,6 +35,8 @@ isolados não fornecem suporte para essas implementações.
   CBF e football-data.org, sem fusão ou uso preditivo.
 - [x] Inventariar lacunas: notícias, lesões, xG, eventos, pressão ou odds históricas.
 - [x] Priorizar testes por benefício, cobertura local, custo e licença a verificar.
+- [x] Testar de forma limitada o acesso SportMonks com token local, sem compra;
+  registrar que a Série A brasileira não consta nas ligas desta credencial.
 - [ ] Escolher fonte somente quando houver necessidade concreta e viabilidade.
 - [ ] Definir mapeamento de IDs entre provedores com rastreabilidade e revisão de ambiguidades.
 - [ ] Implementar um adaptador por fonte e contrato normalizado comum.
@@ -63,9 +65,12 @@ O [estudo de vínculos de 2026](../experiments/cbf-bsa-2026-links.md) propôs 20
 de IDs de clubes com 267 jogos reconciliados e preservou uma divergência de horário.
 Identidades de atletas e vínculos de outras competições/temporadas continuam abertos.
 O [inventário de lacunas](../experiments/phase-7-gap-inventory.md) prioriza cobertura
-CBF e a busca por odds históricas verificáveis. SportMonks é apenas candidata para
-um teste limitado de cobertura; assinatura, licença e temporadas acessíveis ainda
-não foram confirmadas.
+CBF e a busca por odds históricas verificáveis. A viabilidade de SportMonks para
+Série A brasileira, licença e temporadas acessíveis ainda não foi confirmada.
+O [teste de acesso SportMonks](../experiments/sportmonks-account-coverage-2026.md)
+autenticou o token, mas não encontrou a liga 648 entre as sete ligas retornadas.
+Nenhuma partida da Série A foi amostrada; cobertura histórica e complementos
+específicos permanecem desconhecidos.
 
 O teste de ausência de entrada do comando `cbf-collect` valida a mensagem de
 erro na própria regra e o código de saída da CLI. A saída formatada pelo Rich

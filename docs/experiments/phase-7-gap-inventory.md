@@ -40,10 +40,15 @@ os termos contratuais específicos prevalecem.
 Concluir e auditar a coleta CBF já iniciada, medir cobertura real de súmulas e
 revisar vínculos de atletas antes de experimentar efeitos individuais. Para odds,
 confirmar primeiro que existe histórico com horários de observação e direito de
-uso; a carteira prospectiva atual não supre essa lacuna. SportMonks permanece
-**candidata a um teste de cobertura**, sem ser escolhida como fonte do produto.
-O teste depende de acesso à conta e de verificar ligas/recursos/temporadas
-habilitados; nenhuma credencial deve entrar no Git ou em logs.
+uso; a carteira prospectiva atual não supre essa lacuna. SportMonks foi avaliada
+como candidata, sem ser escolhida como fonte do produto. O teste de cobertura
+depende de acesso à liga, às temporadas e aos recursos necessários; nenhuma
+credencial deve entrar no Git ou em logs.
+
+O [teste autorizado com token local](sportmonks-account-coverage-2026.md) retornou
+sete ligas na conta, sem a Série A brasileira (ID 648), e a consulta direta à liga
+não trouxe dados. A cobertura de partidas não pôde ser medida. A fonte continua
+inviável para integração com esta credencial, sem contratação.
 
 Uma nova variável só pode alterar probabilidades após comparação temporal com o
 protocolo da fase 3 e análise de cobertura. As súmulas coletadas depois dos jogos
