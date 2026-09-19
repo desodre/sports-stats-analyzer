@@ -119,6 +119,31 @@ revisão, sem fusão automática. A coleta completa exige milhares de requisiç�
 várias horas; mantenha uma sessão ativa e não rode outra varredura em paralelo.
 Se houver falha ou interrupção, execute o mesmo comando novamente.
 
+## URLs de jogos observados
+
+Os históricos de clubes já coletados permitem montar um catálogo local, sem novas
+requisições. O comando usa a observação mais recente de cada clube, valida host,
+competição, temporada e ID da URL, deduplica por competição e ID do jogo e confere
+placar e equipes entre os dois cartões quando ambos existem. Referências
+contraditórias não entram no arquivo exportado.
+
+```bash
+uv run sports-stats-analyzer cbf-match-urls --season 2026 \
+  --urls-file data/cbf/match-urls-2026.txt
+uv run sports-stats-analyzer cbf-collect \
+  --urls-file data/cbf/match-urls-2026.txt --max-documents 20
+```
+
+O relatório JSON informa clubes indexados, páginas de histórico presentes, cartões,
+jogos distintos, jogos presentes em dois históricos e referências únicas. O arquivo
+de URLs é criado somente se não existir; `--replace` autoriza substituí-lo. Guarde
+o arquivo em `data/`, ignorado pelo Git. A exportação lista jogos *observados* nos
+históricos, sem afirmar que o calendário oficial está completo ou que toda página
+possui súmula disponível. `cbf-collect` interrompe o lote se uma página não tiver
+súmula; nesse caso, use URLs selecionadas ou um lote menor após revisar a página.
+A [medição de 2026](experiments/cbf-2026-match-catalog.md) registra 1.508 URLs e
+uma referência presente em apenas um histórico.
+
 A execução integral de 2026 foi feita como unidade temporária do `systemd --user`;
 em 19/09/2026, a unidade estava inativa com `Result=success` e código de saída 0:
 

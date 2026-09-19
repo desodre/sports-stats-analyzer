@@ -32,7 +32,9 @@ do roteiro: decisões da fase 7 sobre enriquecimento, caso necessário. Painel l
 atualização, backup e workflow de CI para GitHub foram entregues. A fase 7 começou
 com coleta CBF e auditoria automatizada de 2026; a revisão dirigida dos HTML confirmou
 o conteúdo vazio de um dos IDs do Ituano e preservou a ambiguidade. A coleta histórica
-é o próximo passo. A análise de partidas completas em vídeo foi registrada como hipótese
+teve os 15 índices coletados e a rotina sequencial de abas foi iniciada. O catálogo
+local encontrou 1.508 URLs distintas de jogos de 2026. A análise de partidas
+completas em vídeo foi registrada como hipótese
 futura, condicionada a direitos de uso, qualidade da extração e validação temporal.
 A fase 5 entregou previsões prospectivas,
 odds manuais/CSV e carteira virtual, ainda sem apostas reais observadas.

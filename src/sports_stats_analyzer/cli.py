@@ -131,6 +131,38 @@ def cbf_team_audit(
     typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
 
 
+@app.command()
+def cbf_match_urls(
+    season: Annotated[int | None, typer.Option(min=2000, max=2100)] = None,
+    urls_file: Annotated[
+        Path | None, typer.Option(help="Grava URLs deduplicadas para cbf-collect; não sobrescreve.")
+    ] = None,
+    replace: bool = False,
+) -> None:
+    """Cataloga URLs de jogos a partir dos históricos CBF já coletados, sem rede."""
+    from sports_stats_analyzer.cbf_matches import catalog_match_urls
+
+    if urls_file is not None and urls_file.exists() and not replace:
+        raise typer.BadParameter("Arquivo de URLs já existe; use --replace para sobrescrever")
+    try:
+        settings = Settings()
+        result = catalog_match_urls(settings.sports_database_path, season or datetime.now(UTC).year)
+        urls = result.pop("urls")
+        if urls_file is not None:
+            urls_file.parent.mkdir(parents=True, exist_ok=True)
+            mode = "w" if replace else "x"
+            with urls_file.open(mode, encoding="utf-8") as stream:
+                stream.write(f"# URLs CBF {result['season']}; derivadas de históricos de clubes\n")
+                stream.writelines(f"{item['url']}\n" for item in urls)
+            result["urls_file"] = str(urls_file)
+        result["url_count"] = len(urls)
+        result["sample_urls"] = urls[:5]
+    except (ValueError, sqlite3.Error, OSError, ValidationError) as error:
+        typer.echo(f"Falha no catálogo de jogos CBF: {error}", err=True)
+        raise typer.Exit(1) from None
+    typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
+
+
 class Resource(StrEnum):
     competitions = "competitions"
     matches = "matches"

@@ -162,10 +162,23 @@ uv run sports-stats-analyzer cbf-team-audit --season 2026
 
 Repita o primeiro comando para continuar de onde parou. Veja no procedimento da
 coleta como obter o pacote público de certificados exigido pelo domínio da CBF.
-A [auditoria inicial de 2026](docs/experiments/cbf-2026-audit.md) registra a
-cobertura e as ambiguidades que ainda exigem revisão. A proposta de analisar
+A [auditoria de 2026](docs/experiments/cbf-2026-audit.md) registra a cobertura,
+a revisão dos HTML e a identidade que ainda exige conciliação. A proposta de analisar
 [partidas completas em vídeo](docs/experiments/full-match-video.md) foi guardada
 como pesquisa futura, sem alterar as previsões atuais.
+
+Após revisar os HTML de 2026, os índices de 2023–2025 foram coletados. A rotina
+`sh scripts/collect_cbf_history.sh` coleta as abas desses anos sequencialmente e
+audita cada temporada antes de avançar. A coleta leva várias horas e pode ser
+retomada após interrupção. Para catalogar URLs de jogos já observados:
+
+```bash
+uv run sports-stats-analyzer cbf-match-urls --season 2026 \
+  --urls-file data/cbf/match-urls-2026.txt
+```
+
+O [catálogo de 2026](docs/experiments/cbf-2026-match-catalog.md) mediu 1.508 URLs
+distintas; não comprova calendário completo ou disponibilidade de todas as súmulas.
 
 ## Cotações e carteira virtual
 
