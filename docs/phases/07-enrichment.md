@@ -55,6 +55,13 @@ futura; não há ingestão ou treinamento de vídeo nesta etapa.
 Os 15 índices de 2023–2025 foram coletados. A
 [rotina sequencial](../cbf-collection.md) está pronta para retomar as abas por ano e
 auditar cobertura e integridade antes de prosseguir; as abas históricas ainda faltam.
+Em 19/09/2026, a varredura de 2023 parou no HTTP 404 da aba `atletas` do clube
+`20287` na Copa do Brasil, embora o índice o liste. O coletor agora registra 404
+por aba e prossegue, mantendo a indisponibilidade visível na auditoria. A rotina
+histórica aceita essa lacuna explícita para avançar de ano; a coleta de 2023–2025
+continua em andamento e a cobertura final ainda precisa ser medida. Após reiniciar
+o serviço, as três abas desse clube responderam com sucesso; o 404 observado foi
+transitório nessa URL.
 O [catálogo local de jogos de 2026](../experiments/cbf-2026-match-catalog.md)
 deduplicou 1.508 URLs e mediu a cobertura de históricos das cinco competições.
 O mesmo comando servirá aos anos históricos quando as abas estiverem coletadas.

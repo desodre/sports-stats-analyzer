@@ -129,7 +129,14 @@ def test_collect_resumes_without_redownloading_and_reports_coverage(tmp_path):
     instance = CBFTeamCollector(tmp_path / "sports.db", tmp_path / "limits", client=client)
     instance.gate.acquire = lambda: None
     first = instance.collect_teams(["serie-a"], 2026, max_requests=2)
-    assert first == {"season": 2026, "requests": 2, "indexes": 1, "team_pages": 1, "skipped": 0}
+    assert first == {
+        "season": 2026,
+        "requests": 2,
+        "indexes": 1,
+        "team_pages": 1,
+        "skipped": 0,
+        "unavailable": 0,
+    }
     assert team_coverage(tmp_path / "sports.db", 2026) == [
         {"competition": "serie-a", "teams": 1, "athletes": 1, "history": 0, "statistics": 0}
     ]
@@ -215,6 +222,92 @@ def test_cached_index_rehydrates_memberships_after_interruption(tmp_path):
     assert result["requests"] == 1
     assert requested == [TEAM + "?tab=atletas"]
     assert team_coverage(tmp_path / "sports.db", 2026)[0]["teams"] == 1
+
+
+def test_detail_404_is_recorded_and_collection_continues(tmp_path):
+    from sports_stats_analyzer.cbf_audit import audit_team_pages
+
+    requested = []
+    missing = {"value": True}
+
+    def handler(request):
+        url = str(request.url)
+        requested.append(url)
+        if url == INDEX:
+            return httpx.Response(200, text=INDEX_HTML)
+        if request.url.params.get("tab") == "atletas" and missing["value"]:
+            return httpx.Response(404)
+        body = {
+            "atletas": ATHLETES_HTML,
+            "historico-de-partidas": HISTORY_HTML,
+            "estatisticas": STATS_HTML,
+        }[request.url.params["tab"]]
+        return httpx.Response(200, text=body)
+
+    database = tmp_path / "sports.db"
+    instance = CBFTeamCollector(
+        database,
+        tmp_path / "limits",
+        client=httpx.Client(transport=httpx.MockTransport(handler)),
+    )
+    instance.gate.acquire = lambda: None
+    events = []
+    first = instance.collect_teams(["serie-a"], 2026, progress=events.append)
+    assert first == {
+        "season": 2026,
+        "requests": 4,
+        "indexes": 1,
+        "team_pages": 2,
+        "skipped": 0,
+        "unavailable": 1,
+    }
+    assert events[1]["status"] == "unavailable_404"
+    assert requested == [
+        INDEX,
+        *(TEAM + f"?tab={tab}" for tab in ("atletas", "historico-de-partidas", "estatisticas")),
+    ]
+    with sqlite3.connect(database) as connection:
+        assert connection.execute(
+            "SELECT url, status_code FROM cbf_team_unavailable"
+        ).fetchall() == [(TEAM + "?tab=atletas", 404)]
+    audit = audit_team_pages(database, 2026)
+    assert audit["coverage"][0]["tabs"]["atletas"] == {
+        "observed": 0,
+        "nonempty": 0,
+        "unavailable": 1,
+        "expected": 1,
+    }
+    assert audit["issue_counts"] == {"unavailable_404": 1, "incomplete_results": 1}
+
+    second = instance.collect_teams(["serie-a"], 2026)
+    assert second["requests"] == 0
+    assert second["unavailable"] == 1
+    assert len(requested) == 4
+
+    missing["value"] = False
+    refreshed = instance.collect_teams(["serie-a"], 2026, retry_unavailable=True)
+    assert refreshed["requests"] == 1
+    assert refreshed["unavailable"] == 0
+    with sqlite3.connect(database) as connection:
+        assert connection.execute("SELECT COUNT(*) FROM cbf_team_unavailable").fetchone()[0] == 0
+    assert audit_team_pages(database, 2026)["coverage"][0]["tabs"]["atletas"]["observed"] == 1
+
+
+@pytest.mark.parametrize("url", [INDEX, TEAM + "?tab=atletas"])
+def test_index_404_and_detail_500_remain_fatal(tmp_path, url):
+    def handler(request):
+        if str(request.url) == url:
+            return httpx.Response(404 if url == INDEX else 500)
+        return httpx.Response(200, text=INDEX_HTML)
+
+    instance = CBFTeamCollector(
+        tmp_path / "sports.db",
+        tmp_path / "limits",
+        client=httpx.Client(transport=httpx.MockTransport(handler)),
+    )
+    instance.gate.acquire = lambda: None
+    with pytest.raises(CBFError):
+        instance.collect_teams(["serie-a"], 2026)
 
 
 def test_cli_exposes_team_commands():

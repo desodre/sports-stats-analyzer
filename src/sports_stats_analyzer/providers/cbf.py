@@ -28,6 +28,10 @@ class CBFError(ValueError):
     """Entrada ou resposta da CBF inesperada; não tentar outro host."""
 
 
+class CBFNotFound(CBFError):
+    """A URL permitida retornou HTTP 404."""
+
+
 class CBFRequestGate:
     """Um pedido a cada 15,1 s, inclusive entre processos e após reinícios.
 
@@ -193,6 +197,10 @@ class CBFCollector:
                         raise CBFError("Resposta maior que o limite de segurança")
                     chunks.append(chunk)
                 return b"".join(chunks), response.headers
+        except httpx.HTTPStatusError as error:
+            if error.response.status_code == 404:
+                raise CBFNotFound(f"Página CBF não encontrada: {url}") from error
+            raise CBFError(f"Falha HTTP em {url}: {error}") from error
         except httpx.HTTPError as error:
             raise CBFError(f"Falha HTTP em {url}: {error}") from error
 

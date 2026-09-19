@@ -98,6 +98,7 @@ def test_audit_reports_coverage_semantics_integrity_and_identity_candidates(tmp_
     assert report["coverage"][0]["tabs"]["historico-de-partidas"] == {
         "observed": 1,
         "nonempty": 1,
+        "unavailable": 0,
         "expected": 2,
     }
     assert report["issue_counts"] == {

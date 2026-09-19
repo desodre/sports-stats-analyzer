@@ -70,6 +70,7 @@ def cbf_teams(
     season: Annotated[int | None, typer.Option(min=2000, max=2100)] = None,
     max_requests: Annotated[int, typer.Option(min=1, max=10000)] = 20,
     refresh: bool = False,
+    retry_unavailable: bool = False,
     progress: bool = False,
 ) -> None:
     """Coleta clubes, atletas listados, jogos e estatísticas da CBF, com retomada."""
@@ -89,6 +90,7 @@ def cbf_teams(
                 season or datetime.now(UTC).year,
                 max_requests=max_requests,
                 refresh=refresh,
+                retry_unavailable=retry_unavailable,
                 progress=(lambda event: typer.echo(json.dumps(event, ensure_ascii=False)))
                 if progress
                 else None,

@@ -54,6 +54,18 @@ def audit_team_pages(database: Path, season: int) -> dict:
                 (season,),
             )
         ]
+        unavailable = (
+            [
+                dict(row)
+                for row in connection.execute(
+                    "SELECT competition, team_id, tab, status_code, observed_at "
+                    "FROM cbf_team_unavailable WHERE season=? ORDER BY competition, team_id, tab",
+                    (season,),
+                )
+            ]
+            if "cbf_team_unavailable" in tables
+            else []
+        )
     if not teams:
         raise ValueError("Nenhum clube CBF registrado para a temporada")
 
@@ -109,6 +121,7 @@ def audit_team_pages(database: Path, season: int) -> dict:
             )
 
     memberships = {(team["competition"], team["team_id"]) for team in teams}
+    missing_pages = {(row["competition"], row["team_id"], row["tab"]): row for row in unavailable}
     for competition, team_id, tab in latest:
         if team_id is not None and (competition, team_id) not in memberships:
             issue(
@@ -177,12 +190,16 @@ def audit_team_pages(database: Path, season: int) -> dict:
                 issue("invalid_payload", competition=competition, tab="index", page_id=index["id"])
         tabs = {}
         for tab in TABS:
-            observed = nonempty = 0
+            observed = nonempty = unavailable_count = 0
             for team in members:
                 team_id = team["team_id"]
                 page = latest.get((competition, team_id, tab))
                 if page is None:
-                    issue("missing_tab", competition=competition, team_id=team_id, tab=tab)
+                    if (competition, team_id, tab) in missing_pages:
+                        unavailable_count += 1
+                        issue("unavailable_404", competition=competition, team_id=team_id, tab=tab)
+                    else:
+                        issue("missing_tab", competition=competition, team_id=team_id, tab=tab)
                     continue
                 observed += 1
                 try:
@@ -290,7 +307,12 @@ def audit_team_pages(database: Path, season: int) -> dict:
                             tab=tab,
                             page_id=page["id"],
                         )
-            tabs[tab] = {"observed": observed, "nonempty": nonempty, "expected": len(members)}
+            tabs[tab] = {
+                "observed": observed,
+                "nonempty": nonempty,
+                "unavailable": unavailable_count,
+                "expected": len(members),
+            }
         coverage.append(
             {
                 "competition": competition,

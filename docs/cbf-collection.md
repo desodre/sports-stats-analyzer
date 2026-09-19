@@ -81,6 +81,13 @@ uv run sports-stats-analyzer cbf-team-audit --season 2026
 
 O primeiro comando começa pelos cinco índices, depois coleta as três abas de cada
 ID. Ao repetir, pula páginas já armazenadas; `--refresh` força nova observação.
+Se uma aba de clube listada no índice responder HTTP 404, a coleta registra URL,
+competição, temporada, clube, aba e horário em `cbf_team_unavailable`, informa
+`unavailable_404` no progresso e continua. A URL registrada não é requisitada na
+retomada normal; `--retry-unavailable` tenta essas URLs novamente e remove o
+registro se a página voltar. `--refresh` também tenta novamente, mas refaz todos os
+índices e abas.
+Falhas dos índices e outros erros HTTP continuam encerrando o lote.
 `--max-requests` limita o tamanho do lote, não a cota temporal. Para um processo
 contínuo, aumente esse valor e acrescente `--progress` para emitir cada página
 concluída, mantendo o mesmo diretório de lock. Outros anos
@@ -112,8 +119,13 @@ sh scripts/collect_cbf_history.sh
 ```
 
 O script usa o mesmo lock de cota, retoma abas já armazenadas e grava relatórios em
-`data/cbf/audits/`. Só avança para o próximo ano quando todas as abas e índices do
-ano atual estão presentes e os arquivos passam na verificação de integridade.
+`data/cbf/audits/`. Só avança para o próximo ano quando todos os índices estão
+presentes, cada aba foi armazenada ou respondeu HTTP 404, e os arquivos passam na
+verificação de integridade. O relatório mostra `observed`, `unavailable` e
+`expected` por aba; um 404 permanece como lacuna de dados, não como página coletada.
+Verifique `unavailable_404` antes de usar os dados históricos. Para testar
+novamente URLs registradas, rode `cbf-teams --season ANO --retry-unavailable`
+com o mesmo lock de cota; as páginas já armazenadas continuam em cache.
 Sinais de conteúdo vazio e candidatos de identidade continuam no relatório para
 revisão, sem fusão automática. A coleta completa exige milhares de requisições e
 várias horas; mantenha uma sessão ativa e não rode outra varredura em paralelo.

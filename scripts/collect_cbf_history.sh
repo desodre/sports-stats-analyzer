@@ -30,7 +30,10 @@ report = json.loads(Path(sys.argv[2]).read_text())
 coverage = report["coverage"]
 complete = len(coverage) == 5 and all(
     item["index_observed"]
-    and all(tab["observed"] == tab["expected"] for tab in item["tabs"].values())
+    and all(
+        tab["observed"] + tab.get("unavailable", 0) == tab["expected"]
+        for tab in item["tabs"].values()
+    )
     for item in coverage
 )
 integrity = not any(
@@ -39,8 +42,9 @@ integrity = not any(
 )
 pages = report["stored_pages"]
 signals = report["issue_counts"]
-print(f"CBF {season}: cobertura completa={complete}, integridade={integrity}, "
-      f"páginas={pages}, sinais={signals}")
+unavailable = signals.get("unavailable_404", 0)
+print(f"CBF {season}: varredura concluída={complete}, integridade={integrity}, "
+      f"páginas={pages}, abas HTTP 404={unavailable}, sinais={signals}")
 if not complete or not integrity:
     sys.exit(1)
 ' "$season" "$AUDIT_DIR/$season.json"

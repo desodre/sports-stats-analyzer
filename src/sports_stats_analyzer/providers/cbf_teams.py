@@ -12,7 +12,13 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
-from sports_stats_analyzer.providers.cbf import TEAM_PATH, CBFCollector, CBFError, validate_url
+from sports_stats_analyzer.providers.cbf import (
+    TEAM_PATH,
+    CBFCollector,
+    CBFError,
+    CBFNotFound,
+    validate_url,
+)
 
 BASE = "https://www.cbf.com.br"
 COMPETITIONS = {
@@ -307,6 +313,15 @@ def _schema(connection: sqlite3.Connection) -> None:
     connection.execute(
         "CREATE INDEX IF NOT EXISTS cbf_team_pages_lookup ON cbf_team_pages (competition, season, team_id, tab)"
     )
+    connection.execute("""CREATE TABLE IF NOT EXISTS cbf_team_unavailable (
+        url TEXT PRIMARY KEY,
+        competition TEXT NOT NULL,
+        season INTEGER NOT NULL,
+        team_id INTEGER NOT NULL,
+        tab TEXT NOT NULL,
+        status_code INTEGER NOT NULL CHECK (status_code = 404),
+        observed_at TEXT NOT NULL
+    )""")
 
 
 class CBFTeamCollector(CBFCollector):
@@ -362,6 +377,25 @@ class CBFTeamCollector(CBFCollector):
                 json.dumps(parsed, ensure_ascii=False, separators=(",", ":")),
             ),
         )
+        connection.execute("DELETE FROM cbf_team_unavailable WHERE url = ?", (url,))
+        connection.commit()
+
+    def _record_unavailable(
+        self,
+        connection: sqlite3.Connection,
+        url: str,
+        competition: str,
+        season: int,
+        team_id: int,
+        tab: str,
+    ) -> None:
+        connection.execute(
+            """INSERT INTO cbf_team_unavailable
+            (url, competition, season, team_id, tab, status_code, observed_at)
+            VALUES (?, ?, ?, ?, ?, 404, ?)
+            ON CONFLICT (url) DO UPDATE SET observed_at=excluded.observed_at""",
+            (url, competition, season, team_id, tab, datetime.now(UTC).isoformat()),
+        )
         connection.commit()
 
     def _record_teams(
@@ -401,6 +435,7 @@ class CBFTeamCollector(CBFCollector):
         *,
         max_requests: int = 20,
         refresh: bool = False,
+        retry_unavailable: bool = False,
         progress: Callable[[dict], None] | None = None,
     ) -> dict:
         if not 1 <= max_requests <= 10000:
@@ -409,7 +444,14 @@ class CBFTeamCollector(CBFCollector):
         for competition in selected:
             index_url(competition, season)
         self.database_path.parent.mkdir(parents=True, exist_ok=True)
-        result = {"season": season, "requests": 0, "indexes": 0, "team_pages": 0, "skipped": 0}
+        result = {
+            "season": season,
+            "requests": 0,
+            "indexes": 0,
+            "team_pages": 0,
+            "skipped": 0,
+            "unavailable": 0,
+        }
         with sqlite3.connect(self.database_path) as connection:
             _schema(connection)
             for competition in selected:
@@ -471,9 +513,37 @@ class CBFTeamCollector(CBFCollector):
                         if not refresh and self._cached(connection, detail_url):
                             result["skipped"] += 1
                             continue
+                        if (
+                            not refresh
+                            and not retry_unavailable
+                            and connection.execute(
+                                "SELECT 1 FROM cbf_team_unavailable WHERE url = ?", (detail_url,)
+                            ).fetchone()
+                        ):
+                            result["skipped"] += 1
+                            result["unavailable"] += 1
+                            continue
                         if result["requests"] >= max_requests:
                             return result
-                        body, _ = self._request(detail_url, 5 * 1024 * 1024)
+                        try:
+                            body, _ = self._request(detail_url, 5 * 1024 * 1024)
+                        except CBFNotFound:
+                            result["requests"] += 1
+                            result["unavailable"] += 1
+                            self._record_unavailable(
+                                connection, detail_url, competition, season, team_id, tab
+                            )
+                            if progress:
+                                progress(
+                                    {
+                                        "competition": competition,
+                                        "team_id": team_id,
+                                        "tab": tab,
+                                        "status": "unavailable_404",
+                                        **result,
+                                    }
+                                )
+                            continue
                         result["requests"] += 1
                         if b"<html" not in body[:1024].lower():
                             raise CBFError(f"Clube não retornou HTML: {detail_url}")
