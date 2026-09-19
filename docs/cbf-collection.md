@@ -89,13 +89,16 @@ quanto “Ituano” com IDs distintos; por isso 21 IDs não significam 21 clubes
 Os cinco índices de 2026 retornaram 20, 20, 21, 96 e 126 IDs, respectivamente
 para Séries A–D e Copa do Brasil; são 171 IDs únicos entre competições. Esses números
 representam o site observado, não uma validação independente dos participantes.
-São 283 participações e até 849 páginas de abas, além dos cinco índices: no teto
-configurado, a coleta integral pode levar mais de três horas e meia. Consulte
-`cbf-team-coverage` durante a execução; uma interrupção não exige reiniciar do zero.
+São 283 participações e 849 páginas de abas, além dos cinco índices. A coleta
+integral de 2026 terminou com cobertura registrada para as três abas de todas
+as participações; isso não substitui a auditoria de identidades ou do conteúdo.
+Consulte `cbf-team-coverage` para conferir o banco local. Uma interrupção em
+uma nova coleta não exige reiniciar do zero.
 Por decisão do responsável, a coleta de 2023–2025 nessas mesmas competições é a
 segunda etapa, após concluir e auditar 2026; não começou neste lote.
 
-A execução integral de 2026 foi iniciada como unidade temporária do `systemd --user`:
+A execução integral de 2026 foi feita como unidade temporária do `systemd --user`;
+em 19/09/2026, a unidade estava inativa com `Result=success` e código de saída 0:
 
 ```bash
 systemctl --user status sports-stats-cbf-teams-2026.service

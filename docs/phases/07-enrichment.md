@@ -2,8 +2,9 @@
 
 Estado: iniciada a coleta exploratória de súmulas e páginas de clubes CBF; enriquecimento estatístico
 e integração ao modelo continuam pendentes.
-O lote integral de páginas dos clubes de 2026 está em execução como serviço
-temporário local; cobertura completa ainda não foi atestada.
+O lote integral de páginas dos clubes de 2026 terminou: os cinco índices e as
+849 abas previstas estão armazenados. A auditoria de identidades e qualidade
+dos dados ainda não foi concluída.
 Depende de lacunas demonstradas pelas fases anteriores e escolha futura de fontes.
 
 Lacuna demonstrada na fase 4: BSA 2025 não retornou escalações, bancos ou eventos
@@ -17,7 +18,8 @@ isolados não fornecem suporte para essas implementações.
   integridade, retomada e cota conservadora; sem alterar o modelo.
 - [x] Implementar coleta retomável de índices e abas de clubes das Séries A–D e
   Copa do Brasil masculina/2026, com HTML bruto e observação temporal separada.
-- [ ] Concluir todas as abas de todos os clubes e auditar cobertura/duplicidades.
+- [x] Concluir a coleta das abas de 2026 nas cinco competições (283 participações).
+- [ ] Auditar identidades, cobertura semântica e duplicidades nas páginas de 2026.
 - [ ] Após concluir 2026, coletar e auditar as temporadas de 2023–2025 no mesmo escopo.
 - [ ] Descobrir/cadastrar URLs de jogos em escala e medir cobertura por temporada.
 - [ ] Extrair e revisar escalações, substituições e minutos das súmulas.
@@ -28,6 +30,11 @@ isolados não fornecem suporte para essas implementações.
 - [ ] Definir mapeamento de IDs entre provedores com rastreabilidade e revisão de ambiguidades.
 - [ ] Implementar um adaptador por fonte e contrato normalizado comum.
 - [ ] Avaliar contribuição incremental com o mesmo protocolo temporal da fase 3.
+
+O teste de ausência de entrada do comando `cbf-collect` valida a mensagem de
+erro na própria regra e o código de saída da CLI. A saída formatada pelo Rich
+varia conforme largura e cores do terminal, por isso não é usada como contrato
+literal do teste.
 
 ## Notícias, quando autorizadas e disponíveis
 

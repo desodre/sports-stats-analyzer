@@ -5,9 +5,10 @@ from pathlib import Path
 
 import httpx
 import pytest
+import typer
 from typer.testing import CliRunner
 
-from sports_stats_analyzer.cli import app
+from sports_stats_analyzer.cli import app, cbf_collect
 from sports_stats_analyzer.providers.cbf import (
     CBFCollector,
     CBFError,
@@ -179,6 +180,8 @@ def test_limit_stops_before_next_page(tmp_path):
 
 
 def test_cli_requires_input():
+    with pytest.raises(typer.BadParameter, match="Informe --url ou --urls-file"):
+        cbf_collect(url=None, urls_file=None)
+
     result = CliRunner().invoke(app, ["cbf-collect"])
-    assert result.exit_code == 2 or result.exit_code == 1
-    assert "--url" in result.output
+    assert result.exit_code == 2
