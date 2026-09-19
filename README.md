@@ -183,6 +183,9 @@ Com Poppler instalado, `cbf-sumula-extract ID` lê uma súmula local e retorna
 escalações, substituições e minutos nominais. O
 [piloto de dois PDFs](docs/experiments/cbf-sumula-pilot.md) descreve a validação e
 as limitações; os dados extraídos ainda não alimentam previsões.
+`cbf-team-links --season 2026` propõe vínculos de clubes da Série A com IDs BSA,
+usando jogos observados; o [estudo local](docs/experiments/cbf-bsa-2026-links.md)
+documenta 20 candidatos e uma divergência de horário, sem fusão de cadastros.
 
 ## Cotações e carteira virtual
 

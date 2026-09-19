@@ -36,6 +36,10 @@ teve os 15 índices coletados e a rotina sequencial de abas foi iniciada. O cat�
 local encontrou 1.508 URLs distintas de jogos de 2026. A análise de partidas
 completas em vídeo foi registrada como hipótese
 futura, condicionada a direitos de uso, qualidade da extração e validação temporal.
+Dois PDFs locais passaram por extração piloto de escalações e substituições; 20
+vínculos candidatos de clubes entre CBF/Série A e football-data.org/BSA foram
+apoiados por 267 jogos, com uma divergência de horário preservada. Nenhum desses
+dados altera o modelo.
 A fase 5 entregou previsões prospectivas,
 odds manuais/CSV e carteira virtual, ainda sem apostas reais observadas.
 A auditoria da fase 4 encontrou

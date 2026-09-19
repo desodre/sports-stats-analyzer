@@ -31,6 +31,8 @@ isolados não fornecem suporte para essas implementações.
 - [x] Validar um extrator conservador em duas súmulas locais, com IDs CBF,
   titularidade, substituições e minutos nominais, sem integração ao modelo.
 - [ ] Conciliar IDs CBF com o cadastro local e preservar ambiguidades.
+- [x] Propor vínculos de clubes Série A/2026 com evidência de partidas entre
+  CBF e football-data.org, sem fusão ou uso preditivo.
 - [ ] Inventariar lacunas: notícias, lesões, xG, eventos, pressão ou odds históricas.
 - [ ] Priorizar cada lacuna por benefício testável, cobertura, custo e licença.
 - [ ] Escolher fonte somente quando houver necessidade concreta e viabilidade.
@@ -57,6 +59,9 @@ O mesmo comando servirá aos anos históricos quando as abas estiverem coletadas
 O [piloto de súmulas](../experiments/cbf-sumula-pilot.md) extraiu e revisou dois
 PDFs com 46 atletas e 10 substituições cada. A ampliação da amostra e a conciliação
 com partidas e outros provedores ainda são necessárias.
+O [estudo de vínculos de 2026](../experiments/cbf-bsa-2026-links.md) propôs 20 pares
+de IDs de clubes com 267 jogos reconciliados e preservou uma divergência de horário.
+Identidades de atletas e vínculos de outras competições/temporadas continuam abertos.
 
 O teste de ausência de entrada do comando `cbf-collect` valida a mensagem de
 erro na própria regra e o código de saída da CLI. A saída formatada pelo Rich

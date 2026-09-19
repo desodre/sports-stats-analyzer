@@ -26,6 +26,9 @@ observações de clubes; `cbf_matches.py` cataloga URLs com proveniência por p�
 `cbf_sumulas.py` lê apenas PDFs locais com hash verificado. A extração posicional
 usa `pdftotext` (Poppler) instalado opcionalmente e recusa layouts desconhecidos.
 IDs CBF ainda não são reconciliados com os IDs da fonte inicial.
+`cbf_identity.py` produz candidatos de vínculo entre clubes da Série A e BSA com
+votos e partidas de suporte; nenhuma tabela normalizada ou previsão consome esses
+candidatos automaticamente.
 
 ## Fluxo atual
 

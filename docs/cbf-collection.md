@@ -159,6 +159,23 @@ cronologias não reconhecidos e partidas com expulsões, pois os minutos precisa
 de regras adicionais. Os nomes visivelmente truncados nas tabelas não são usados
 como identidade. Veja o [piloto de dois documentos](experiments/cbf-sumula-pilot.md).
 
+## Candidatos de identidade entre provedores
+
+Para Série A/CBF e BSA de football-data.org, a CLI compara jogos finalizados
+observados e registra a evidência de cada vínculo candidato:
+
+```bash
+uv run sports-stats-analyzer cbf-team-links --season 2026 \
+  --report-file data/cbf/team-links-2026.json
+```
+
+O arquivo JSON completo inclui IDs das partidas que sustentam cada voto e o par de
+jogos reconciliados entre fontes. O arquivo não é sobrescrito sem `--replace` e
+permanece em `data/`. A saída resumida mostra clubes, votos, cobertura e horários
+divergentes. Vínculos não são persistidos como fusões e não afetam previsões. O
+[estudo de 2026](experiments/cbf-bsa-2026-links.md) encontrou 20 candidatos e uma
+divergência de horário explícita.
+
 A execução integral de 2026 foi feita como unidade temporária do `systemd --user`;
 em 19/09/2026, a unidade estava inativa com `Result=success` e código de saída 0:
 

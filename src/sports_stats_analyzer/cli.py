@@ -177,6 +177,41 @@ def cbf_sumula_extract(document_id: Annotated[int, typer.Argument(min=1)]) -> No
     typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
 
 
+@app.command()
+def cbf_team_links(
+    season: Annotated[int | None, typer.Option(min=2000, max=2100)] = None,
+    report_file: Annotated[
+        Path | None, typer.Option(help="Grava evidências completas em JSON; não sobrescreve.")
+    ] = None,
+    replace: bool = False,
+) -> None:
+    """Propõe vínculos Série A CBF ↔ BSA com evidência de jogos, sem fundir IDs."""
+    from sports_stats_analyzer.cbf_identity import audit_team_links
+
+    if report_file is not None and report_file.exists() and not replace:
+        raise typer.BadParameter("Relatório já existe; use --replace para sobrescrever")
+    try:
+        settings = Settings()
+        result = audit_team_links(settings.sports_database_path, season or datetime.now(UTC).year)
+        if report_file is not None:
+            report_file.parent.mkdir(parents=True, exist_ok=True)
+            with report_file.open("w" if replace else "x", encoding="utf-8") as stream:
+                json.dump(result, stream, ensure_ascii=False, indent=2)
+                stream.write("\n")
+        summary = {key: value for key, value in result.items() if key != "linked_matches"}
+        for team in summary["team_links"]:
+            team["votes"] = [
+                {"football_data_team_id": vote["football_data_team_id"], "count": vote["count"]}
+                for vote in team["votes"]
+            ]
+        if report_file is not None:
+            summary["report_file"] = str(report_file)
+    except (ValueError, sqlite3.Error, OSError, ValidationError) as error:
+        typer.echo(f"Falha na conciliação candidata CBF: {error}", err=True)
+        raise typer.Exit(1) from None
+    typer.echo(json.dumps(summary, ensure_ascii=False, indent=2))
+
+
 class Resource(StrEnum):
     competitions = "competitions"
     matches = "matches"
