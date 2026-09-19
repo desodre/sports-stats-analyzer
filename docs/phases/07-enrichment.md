@@ -2,6 +2,8 @@
 
 Estado: iniciada a coleta exploratória de súmulas e páginas de clubes CBF; enriquecimento estatístico
 e integração ao modelo continuam pendentes.
+O lote integral de páginas dos clubes de 2026 está em execução como serviço
+temporário local; cobertura completa ainda não foi atestada.
 Depende de lacunas demonstradas pelas fases anteriores e escolha futura de fontes.
 
 Lacuna demonstrada na fase 4: BSA 2025 não retornou escalações, bancos ou eventos

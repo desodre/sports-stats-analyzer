@@ -63,6 +63,16 @@ O arquivo é dado operacional local, não commitado. A aplicação mantém as CA
 sistema e acrescenta essa cadeia; nunca usa `verify=False`.
 
 ```bash
+mkdir -p data/cbf/certs
+curl -fL https://support.sectigo.com/sfc/servlet.shepherd/version/download/068Uj00000Xugfw \
+  -o data/cbf/certs/sectigo-ov-bundle.crt
+sha256sum data/cbf/certs/sectigo-ov-bundle.crt
+```
+
+Confira o hash e a cadeia antes de usar. O anexo pode mudar no futuro; nesse caso,
+valide-o novamente com a documentação oficial da Sectigo.
+
+```bash
 SPORTS_CBF_CA_BUNDLE=data/cbf/certs/sectigo-ov-bundle.crt \
   uv run sports-stats-analyzer cbf-teams --season 2026 --max-requests 20
 uv run sports-stats-analyzer cbf-team-coverage --season 2026
@@ -84,6 +94,22 @@ configurado, a coleta integral pode levar mais de três horas e meia. Consulte
 `cbf-team-coverage` durante a execução; uma interrupção não exige reiniciar do zero.
 Por decisão do responsável, a coleta de 2023–2025 nessas mesmas competições é a
 segunda etapa, após concluir e auditar 2026; não começou neste lote.
+
+A execução integral de 2026 foi iniciada como unidade temporária do `systemd --user`:
+
+```bash
+systemctl --user status sports-stats-cbf-teams-2026.service
+journalctl --user -u sports-stats-cbf-teams-2026.service -n 30 --no-pager
+uv run sports-stats-analyzer cbf-team-coverage --season 2026
+```
+
+Ela não reinicia automaticamente se falhar. Para interromper deliberadamente,
+use `systemctl --user stop sports-stats-cbf-teams-2026.service`; para retomar,
+execute `cbf-teams` novamente com o mesmo ano, certificado e diretório de cota.
+O progresso pode ser consultado sem interromper a coleta. Não execute uma segunda
+varredura ao mesmo tempo; o lock evitaria exceder a cota, mas duplicaria trabalho.
+Nesta máquina, `Linger=no`: a unidade do usuário depende de uma sessão de login
+ativa e pode parar ao sair do computador ou suspender a máquina. A retomada é segura.
 
 O PDF fornece evidência pós-jogo de escalação e substituições, não de disponibilidade
 pré-jogo. Ainda faltam descoberta completa dos jogos, extração tabular, revisão de
