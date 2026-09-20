@@ -50,6 +50,12 @@ sete ligas na conta, sem a Série A brasileira (ID 648), e a consulta direta à 
 não trouxe dados. A cobertura de partidas não pôde ser medida. A fonte continua
 inviável para integração com esta credencial, sem contratação.
 
+A [avaliação do FBref](fbref-brazil-feasibility.md) encontrou minutos e chutes
+básicos potencialmente úteis, mas acesso automatizado bloqueado neste ambiente,
+remoção dos dados avançados em 2026 e restrições de uso relevantes para o modelo.
+Não integrar nem tratar FBref como fonte de passes detalhados, xG ou eventos até
+existirem acesso autorizado, direitos confirmados e amostra de cobertura atual.
+
 Uma nova variável só pode alterar probabilidades após comparação temporal com o
 protocolo da fase 3 e análise de cobertura. As súmulas coletadas depois dos jogos
 não comprovam informação pré-jogo em backtests históricos.
