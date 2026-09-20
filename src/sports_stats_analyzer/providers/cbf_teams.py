@@ -17,6 +17,7 @@ from sports_stats_analyzer.providers.cbf import (
     CBFCollector,
     CBFError,
     CBFNotFound,
+    CBFTransientError,
     validate_url,
 )
 
@@ -29,6 +30,7 @@ COMPETITIONS = {
     "copa-do-brasil": "copa-do-brasil/masculino",
 }
 TABS = ("atletas", "historico-de-partidas", "estatisticas")
+TRANSIENT_ATTEMPTS = 3
 STATS = {
     "Gols Feitos": "goals_for",
     "Gols Sofridos": "goals_against",
@@ -325,6 +327,42 @@ def _schema(connection: sqlite3.Connection) -> None:
 
 
 class CBFTeamCollector(CBFCollector):
+    def _request_page(
+        self,
+        url: str,
+        result: dict,
+        max_requests: int,
+        progress: Callable[[dict], None] | None,
+        context: dict,
+    ) -> bytes | None:
+        for attempt in range(1, TRANSIENT_ATTEMPTS + 1):
+            if result["requests"] >= max_requests:
+                return None
+            result["requests"] += 1
+            try:
+                body, _ = self._request(url, 5 * 1024 * 1024)
+                return body
+            except CBFTransientError:
+                will_retry = attempt < TRANSIENT_ATTEMPTS and result["requests"] < max_requests
+                if will_retry:
+                    status = "retrying_transport"
+                elif attempt == TRANSIENT_ATTEMPTS:
+                    status = "transport_failed"
+                else:
+                    status = "transport_deferred"
+                if progress:
+                    progress(
+                        {
+                            **context,
+                            "status": status,
+                            "attempt": attempt,
+                            **result,
+                        }
+                    )
+                if attempt == TRANSIENT_ATTEMPTS:
+                    raise
+        return None
+
     def _cached(self, connection: sqlite3.Connection, url: str) -> bool:
         rows = connection.execute(
             "SELECT path FROM cbf_team_pages WHERE url = ? ORDER BY id DESC", (url,)
@@ -457,10 +495,15 @@ class CBFTeamCollector(CBFCollector):
             for competition in selected:
                 url = index_url(competition, season)
                 if refresh or not self._cached(connection, url):
-                    if result["requests"] >= max_requests:
+                    body = self._request_page(
+                        url,
+                        result,
+                        max_requests,
+                        progress,
+                        {"competition": competition, "tab": "index"},
+                    )
+                    if body is None:
                         return result
-                    body, _ = self._request(url, 5 * 1024 * 1024)
-                    result["requests"] += 1
                     if b"<html" not in body[:1024].lower():
                         raise CBFError(f"Índice não retornou HTML: {url}")
                     teams = parse_index(body.decode("utf-8", errors="replace"), competition, season)
@@ -523,12 +566,15 @@ class CBFTeamCollector(CBFCollector):
                             result["skipped"] += 1
                             result["unavailable"] += 1
                             continue
-                        if result["requests"] >= max_requests:
-                            return result
                         try:
-                            body, _ = self._request(detail_url, 5 * 1024 * 1024)
+                            body = self._request_page(
+                                detail_url,
+                                result,
+                                max_requests,
+                                progress,
+                                {"competition": competition, "team_id": team_id, "tab": tab},
+                            )
                         except CBFNotFound:
-                            result["requests"] += 1
                             result["unavailable"] += 1
                             self._record_unavailable(
                                 connection, detail_url, competition, season, team_id, tab
@@ -544,7 +590,8 @@ class CBFTeamCollector(CBFCollector):
                                     }
                                 )
                             continue
-                        result["requests"] += 1
+                        if body is None:
+                            return result
                         if b"<html" not in body[:1024].lower():
                             raise CBFError(f"Clube não retornou HTML: {detail_url}")
                         parsed = parse_detail(

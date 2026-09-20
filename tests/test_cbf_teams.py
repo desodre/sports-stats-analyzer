@@ -8,7 +8,7 @@ import pytest
 from typer.testing import CliRunner
 
 from sports_stats_analyzer.cli import app
-from sports_stats_analyzer.providers.cbf import CBFError, validate_url
+from sports_stats_analyzer.providers.cbf import CBFError, CBFTransientError, validate_url
 from sports_stats_analyzer.providers.cbf_teams import (
     CBFTeamCollector,
     index_url,
@@ -291,6 +291,91 @@ def test_detail_404_is_recorded_and_collection_continues(tmp_path):
     with sqlite3.connect(database) as connection:
         assert connection.execute("SELECT COUNT(*) FROM cbf_team_unavailable").fetchone()[0] == 0
     assert audit_team_pages(database, 2026)["coverage"][0]["tabs"]["atletas"]["observed"] == 1
+
+
+@pytest.mark.parametrize("failure", [httpx.ConnectTimeout, httpx.ConnectError])
+def test_transport_timeout_retries_with_gate_and_counts_every_attempt(tmp_path, failure):
+    requested = []
+    acquired = []
+
+    def handler(request):
+        requested.append(str(request.url))
+        if str(request.url) == INDEX:
+            return httpx.Response(200, text=INDEX_HTML)
+        if request.url.params.get("tab") == "atletas" and requested.count(str(request.url)) == 1:
+            raise failure("TLS handshake timed out")
+        return httpx.Response(
+            200,
+            text={
+                "atletas": ATHLETES_HTML,
+                "historico-de-partidas": HISTORY_HTML,
+                "estatisticas": STATS_HTML,
+            }[request.url.params["tab"]],
+        )
+
+    instance = CBFTeamCollector(
+        tmp_path / "sports.db",
+        tmp_path / "limits",
+        client=httpx.Client(transport=httpx.MockTransport(handler)),
+    )
+    instance.gate.acquire = lambda: acquired.append(1)
+    events = []
+    result = instance.collect_teams(["serie-a"], 2026, progress=events.append)
+    assert result["requests"] == 5
+    assert result["team_pages"] == 3
+    assert len(acquired) == len(requested) == 5
+    assert events[1]["status"] == "retrying_transport"
+    assert events[1]["attempt"] == 1
+    assert events[2]["tab"] == "atletas"
+    assert events[2]["requests"] == 3
+
+
+def test_transport_retry_respects_request_limit_and_resumes(tmp_path):
+    requested = []
+
+    def handler(request):
+        requested.append(str(request.url))
+        if str(request.url) == INDEX:
+            return httpx.Response(200, text=INDEX_HTML)
+        if request.url.params.get("tab") == "atletas" and requested.count(str(request.url)) == 1:
+            raise httpx.ConnectTimeout("TLS handshake timed out")
+        return httpx.Response(200, text=ATHLETES_HTML)
+
+    instance = CBFTeamCollector(
+        tmp_path / "sports.db",
+        tmp_path / "limits",
+        client=httpx.Client(transport=httpx.MockTransport(handler)),
+    )
+    instance.gate.acquire = lambda: None
+    events = []
+    first = instance.collect_teams(["serie-a"], 2026, max_requests=2, progress=events.append)
+    assert first["requests"] == 2
+    assert first["team_pages"] == 0
+    assert events[-1]["status"] == "transport_deferred"
+    second = instance.collect_teams(["serie-a"], 2026, max_requests=1)
+    assert second["requests"] == 1
+    assert second["team_pages"] == 1
+    assert requested.count(TEAM + "?tab=atletas") == 2
+
+
+def test_persistent_transport_timeout_fails_after_three_attempts(tmp_path):
+    requested = []
+
+    def handler(request):
+        requested.append(str(request.url))
+        if str(request.url) == INDEX:
+            return httpx.Response(200, text=INDEX_HTML)
+        raise httpx.ConnectTimeout("TLS handshake timed out")
+
+    instance = CBFTeamCollector(
+        tmp_path / "sports.db",
+        tmp_path / "limits",
+        client=httpx.Client(transport=httpx.MockTransport(handler)),
+    )
+    instance.gate.acquire = lambda: None
+    with pytest.raises(CBFTransientError, match="Falha temporária de rede"):
+        instance.collect_teams(["serie-a"], 2026)
+    assert requested == [INDEX] + [TEAM + "?tab=atletas"] * 3
 
 
 @pytest.mark.parametrize("url", [INDEX, TEAM + "?tab=atletas"])

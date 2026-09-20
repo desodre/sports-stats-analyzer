@@ -20,8 +20,12 @@ requisições. Isso garante até vinte acessos em qualquer janela de cinco minut
 evita rajadas. O timestamp é gravado antes do acesso em
 `SPORTS_RATE_LIMIT_DIR/cbf-public.lock`. Processos nesta máquina devem usar o mesmo
 diretório; outras máquinas ou ferramentas externas não compartilham a cota.
-Não remova o lock para antecipar a coleta. Não há retries automáticos nem desativação
-de TLS. O comando é finito e não executa em segundo plano por conta própria.
+Não remova o lock para antecipar a coleta. `cbf-collect` não faz retries automáticos;
+`cbf-teams` tenta novamente até duas vezes após timeout ou falha de transporte,
+sempre passando pelo mesmo lock e contando cada tentativa em `--max-requests`.
+Outros erros HTTP e falhas de conteúdo não são repetidos automaticamente. A
+validação TLS permanece ativa. O comando é finito e não executa em segundo plano
+por conta própria.
 
 O coletor não segue redirecionamentos; restringe hosts e rotas às cinco competições
 selecionadas e aos PDFs
@@ -88,6 +92,11 @@ retomada normal; `--retry-unavailable` tenta essas URLs novamente e remove o
 registro se a página voltar. `--refresh` também tenta novamente, mas refaz todos os
 índices e abas.
 Falhas dos índices e outros erros HTTP continuam encerrando o lote.
+Um timeout de conexão, inclusive no handshake TLS, ou outra falha de transporte
+recebe até três tentativas no total. Cada tentativa aparece em `requests` e usa a
+cota temporal; `--progress` informa a repetição. Se o limite do lote for atingido,
+a página fica pendente para a próxima execução. Se as três tentativas falharem,
+o comando encerra com erro e pode ser retomado sem baixar páginas já salvas.
 `--max-requests` limita o tamanho do lote, não a cota temporal. Para um processo
 contínuo, aumente esse valor e acrescente `--progress` para emitir cada página
 concluída, mantendo o mesmo diretório de lock. Outros anos
@@ -108,7 +117,8 @@ uma nova coleta não exige reiniciar do zero.
 Por decisão do responsável, a coleta de 2023–2025 nessas mesmas competições é a
 segunda etapa, após concluir e auditar 2026. A revisão dirigida foi registrada em
 [auditoria de 2026](experiments/cbf-2026-audit.md). Os 15 índices de 2023–2025 já
-foram baixados, mas as abas desses anos ainda precisam de coleta e auditoria. São
+foram baixados. A varredura de 2023 terminou com 662 páginas armazenadas e três
+abas HTTP 404 registradas; 2024 está em execução e 2025 ainda aguarda suas abas. São
 220 participações em 2023, 219 em 2024 e 221 em 2025, conforme os índices do site;
 IDs com nomes parecidos são mantidos separados.
 
