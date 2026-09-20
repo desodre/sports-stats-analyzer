@@ -15,7 +15,8 @@ Não há execução de apostas em casas.
 Fase 5 disponível: previsões prospectivas pela CLI, odds manuais/CSV, avaliação de EV
 e carteira virtual. A The Odds API pode fornecer odds 1X2 atuais após confirmação
 manual do vínculo com uma partida. Rentabilidade não validada;
-até a entrega desta fase, nenhuma cotação real foi cadastrada.
+uma [amostra real](docs/experiments/the-odds-api-feasibility-2026.md) trouxe 69
+cotações de 23 casas para uma partida, sem aposta virtual registrada.
 
 Fase 4: coleta e relatórios de contexto disponíveis. A auditoria acessou elenco e
 perfil de jogador, mas não encontrou escalações/eventos nas partidas expandidas de

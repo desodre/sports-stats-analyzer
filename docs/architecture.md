@@ -19,7 +19,11 @@ Fase 5: `markets.py` usa Decimal para odds e valores da carteira, CSV da bibliot
 padrão e persistência SQLite aditiva (migração 2). Previsões prospectivas guardam
 parâmetros e revisões de treino; odds guardam observação e recebimento local.
 Limites, reservas e liquidação da carteira virtual usam transações de escrita.
-Nenhuma dependência adicional nem segunda API foi necessária.
+A fonte inicial de partidas permanece football-data.org. O adaptador opcional da
+The Odds API usa HTTPX já presente: lista eventos e importa apenas odds 1X2 atuais
+após confirmação manual do vínculo com uma partida local. As cotações normalizadas
+guardam casa, horário de atualização e origem; a resposta bruta de odds não é
+armazenada como snapshot de partidas. A chave fica no `.env` local.
 
 Fase 7 mantém a CBF isolada do modelo: `cbf_team_pages` guarda HTML por hash e
 observações de clubes; `cbf_matches.py` cataloga URLs com proveniência por página;

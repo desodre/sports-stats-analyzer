@@ -1,7 +1,8 @@
 # Fase 5 — Cotações, valor esperado e simulação
 
-Estado: implementada e testada. Fluxo prospectivo disponível; validação financeira
-real pendente de cotações e resultados observados, sem histórico fabricado.
+Estado: implementada e testada com a The Odds API em uma partida real.
+Fluxo prospectivo disponível; validação financeira segue pendente de uma amostra
+de decisões e resultados observados, sem histórico fabricado.
 
 ## Implementações
 
@@ -43,10 +44,10 @@ Resultado positivo de simulação não constitui promessa de retorno futuro.
 cronologia, margem incompleta, EV, abstenção, exposição, anulação, liquidação
 idempotente e sequência prospectiva sintética de 20 apostas. Lint e formato aprovados.
 
-BSA 2026 coletado e normalizado (380 partidas). Uma previsão prospectiva real foi
-registrada para a partida 555011 com 1.407 resultados anteriores no treino.
-Não foram fornecidas odds reais: a carteira do projeto permanece com zero cotações,
-zero apostas, saldo virtual 100 e ROI nulo. Os testes sintéticos são isolados em bancos temporários.
+Na entrega original, BSA 2026 foi coletado e normalizado (380 partidas). Uma
+previsão prospectiva real foi registrada para a partida 555011 com 1.407 resultados
+anteriores no treino. Naquele momento, ainda não havia odds reais: zero cotações,
+zero apostas, saldo virtual 100 e ROI nulo. Os testes sintéticos usaram bancos temporários.
 
 O cenário conservador de probabilidade não é um intervalo de confiança. A incerteza
 da probabilidade individual permanece não estimada. Elegibilidade virtual não
@@ -58,5 +59,8 @@ e [evidência da validação](../experiments/phase-5-validation.md).
 Extensão de 19/09/2026: `odds-events` e `odds-fetch` adicionados para BSA/1X2.
 Testes HTTP simulados verificam mercado completo, cotações vencidas, repetição sem
 duplicatas, vínculo por horário e não exposição da chave em erros ou dados salvos.
-Consulta com chave real e cobertura de casas ainda não foram verificadas; a chave
-deve estar somente no `.env` local. A carteira não cria apostas ao importar odds.
+Consulta com chave real e cobertura inicial de casas foram verificadas em 20/09/2026:
+cinco jogos da rodada apareceram no catálogo e um deles trouxe 69 cotações 1X2
+completas de 23 casas. A carteira não cria apostas ao importar odds. Ver
+[relatório de viabilidade](../experiments/the-odds-api-feasibility-2026.md) para
+evidências, limites, consumo de créditos e teste prospectivo.

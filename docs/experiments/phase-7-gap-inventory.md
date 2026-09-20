@@ -1,14 +1,15 @@
 # Inventário de lacunas e prioridade da fase 7
 
-Revisão em 19/09/2026. A ordem abaixo prioriza testes que podem mudar uma decisão
+Revisão em 20/09/2026. A ordem abaixo prioriza testes que podem mudar uma decisão
 do produto. “Cobertura não verificada” significa que a existência de um campo em
 um catálogo público não comprova disponibilidade na assinatura nem na temporada
-necessária. Nenhuma contratação ou integração de segunda API foi realizada.
+necessária. The Odds API foi integrada apenas para odds atuais; nenhuma nova fonte
+de estatísticas alimenta o modelo.
 
 | Prioridade | Lacuna e benefício testável | Cobertura observada / a medir | Custo e licença antes de integrar |
 | --- | --- | --- | --- |
 | 0 | Escalações e minutos pós-jogo: medir qualidade da extração e usar somente partidas anteriores ao corte de previsão | Football-data.org BSA 2025: escalações/eventos ausentes em 381 observações; CBF: dois PDFs piloto extraídos, histórico 2023–2025 em coleta | CBF já autorizada para coleta local; distribuição dos documentos ou dados derivados não foi liberada. Custo operacional da cota é alto |
-| 1 | Odds históricas: testar retorno e incerteza da carteira com cotações realmente observadas | Zero odds reais na fase 5; necessidade de mercado, casa, horário e termos de liquidação | Fonte, cobertura histórica, preço e direito de armazenamento/uso ainda não verificados. Não inferir lucro de EV estimado |
+| 1 | Odds históricas: testar retorno e incerteza da carteira com cotações realmente observadas | 69 odds atuais de uma partida coletadas em 20/09; histórico e resultados da carteira ainda ausentes | The Odds API anuncia histórico apenas em plano pago; cobertura efetiva ainda não testada. Termos publicados permitem armazenamento e análise, mas não revenda do feed bruto. Não inferir lucro de EV estimado |
 | 1 | Escalações, substituições e eventos por partida: avaliar impacto incremental em log loss, Brier e calibração | CBF dá evidência pós-jogo; pré-jogo e disponibilidade temporal ausentes. Cobertura SportMonks/BSA 2023–2026 não testada nesta conta | Acesso depende de assinatura/temporada; contrato e permissão de uso precisam ser conferidos |
 | 2 | xG e pressão: agregar partidas anteriores, ajustar por contexto e comparar com Poisson | Nenhuma série local; cobertura histórica e definição de métrica desconhecidas | Pode exigir complementos pagos; preço e licença efetivos devem ser confirmados antes de buscar dados |
 | 3 | Notícias e lesões: medir cobertura, antecedência, contradições e eventual ganho incremental | Nenhuma série local de fatos com publicação verificável; elenco não indica disponibilidade | Notícias podem exigir produto adicional e licença de texto; sem fonte contratada |
@@ -55,6 +56,11 @@ básicos potencialmente úteis, mas acesso automatizado bloqueado neste ambiente
 remoção dos dados avançados em 2026 e restrições de uso relevantes para o modelo.
 Não integrar nem tratar FBref como fonte de passes detalhados, xG ou eventos até
 existirem acesso autorizado, direitos confirmados e amostra de cobertura atual.
+
+A [verificação da The Odds API](the-odds-api-feasibility-2026.md) demonstrou acesso
+a odds atuais 1X2 de BSA nesta conta, mas o plano gratuito não inclui histórico.
+A lacuna de odds históricas com horário verificável para backtest financeiro
+permanece aberta; a carteira atual segue prospectiva.
 
 Uma nova variável só pode alterar probabilidades após comparação temporal com o
 protocolo da fase 3 e análise de cobertura. As súmulas coletadas depois dos jogos

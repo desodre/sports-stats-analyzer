@@ -58,4 +58,7 @@ de equipe/pessoa, mas não obteve escalações/eventos mesmo expandindo BSA 2025
 Veja [evidências da cobertura](experiments/context-coverage-bsa.md).
 
 Na fase 5, BSA 2026 também foi coletado (380 partidas, snapshot 8) para gerar uma
-previsão prospectiva. Cotações são entradas manuais/CSV, não vêm da API integrada.
+previsão prospectiva. Cotações podem vir de entrada manual/CSV ou da The Odds API,
+integrada separadamente para 1X2 atual. A
+[verificação real](experiments/the-odds-api-feasibility-2026.md) importou 69 odds
+de uma partida; isso não altera a fonte de jogos ou as probabilidades do modelo.
