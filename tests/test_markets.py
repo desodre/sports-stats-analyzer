@@ -4,13 +4,15 @@ import sqlite3
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 
+import httpx
 import pytest
 from pydantic import ValidationError
 from typer.testing import CliRunner
 
-from sports_stats_analyzer import markets
+from sports_stats_analyzer import markets, odds_collection
 from sports_stats_analyzer.cli import app
 from sports_stats_analyzer.normalization import normalize
+from sports_stats_analyzer.providers.the_odds_api import OddsAPIError, TheOddsAPIClient
 from sports_stats_analyzer.storage import save_snapshot
 
 
@@ -345,3 +347,112 @@ def test_prospective_twenty_bet_simulation_and_roi_interval(setup, monkeypatch):
     assert result["roi_bootstrap_ci95"] is not None
     assert result["roi_bootstrap_ci95"] == markets.wallet(db)["roi_bootstrap_ci95"]
     assert result["roi_bootstrap_ci95"][0] <= result["roi"] <= result["roi_bootstrap_ci95"][1]
+
+
+def test_the_odds_api_event_review_and_recent_complete_market(setup, monkeypatch):
+    db, current, _ = setup
+    monkeypatch.setattr(odds_collection, "now", lambda: current)
+    event_id = "a" * 32
+    event = {
+        "id": event_id,
+        "sport_key": "soccer_brazil_campeonato",
+        "commence_time": (current + timedelta(days=1)).isoformat(),
+        "home_team": "T1",
+        "away_team": "T2",
+    }
+    market = {
+        "key": "h2h",
+        "last_update": (current - timedelta(minutes=1)).isoformat(),
+        "outcomes": [
+            {"name": "T1", "price": 2.1},
+            {"name": "Draw", "price": 3.2},
+            {"name": "T2", "price": 3.7},
+        ],
+    }
+    requests = []
+
+    def respond(request):
+        requests.append(request)
+        if request.url.path.endswith("/events"):
+            return httpx.Response(200, json=[event])
+        return httpx.Response(
+            200,
+            json={
+                **event,
+                "bookmakers": [
+                    {"key": "fresh", "markets": [market]},
+                    {
+                        "key": "stale",
+                        "markets": [
+                            {**market, "last_update": (current - timedelta(minutes=20)).isoformat()}
+                        ],
+                    },
+                    {"key": "partial", "markets": [{**market, "outcomes": market["outcomes"][:2]}]},
+                ],
+            },
+        )
+
+    with TheOddsAPIClient("secret-for-test", httpx.MockTransport(respond)) as client:
+        candidates = odds_collection.event_candidates(db, client, 1000)
+        assert candidates["candidates"][0]["event_id"] == event_id
+        with pytest.raises(ValueError, match="confirm-match"):
+            odds_collection.import_event_odds(db, client, 1000, event_id)
+        assert len(requests) == 1
+        result = odds_collection.import_event_odds(db, client, 1000, event_id, confirmed=True)
+        assert result["inserted"] == 3
+        assert result["skipped_stale_bookmakers"] == 1
+        assert result["skipped_incomplete_bookmakers"] == 1
+        assert (
+            odds_collection.import_event_odds(db, client, 1000, event_id, confirmed=True)[
+                "duplicates"
+            ]
+            == 3
+        )
+    assert requests[0].url.path.endswith("/events")
+    assert requests[0].url.params["apiKey"] == "secret-for-test"
+    assert requests[1].url.params["markets"] == "h2h"
+    assert "secret-for-test" not in str(result)
+    with sqlite3.connect(db) as connection:
+        stored = [
+            json.loads(row[0]) for row in connection.execute("SELECT payload FROM market_quotes")
+        ]
+    assert {row["selection"] for row in stored} == {"home", "draw", "away"}
+    assert all("secret-for-test" not in row["source"] for row in stored)
+    assert markets.wallet(db)["open"] == 0
+
+
+def test_the_odds_api_rejects_wrong_event_and_redacts_key(setup, monkeypatch):
+    db, current, _ = setup
+    monkeypatch.setattr(odds_collection, "now", lambda: current)
+    event_id = "b" * 32
+    wrong_event = {
+        "id": event_id,
+        "sport_key": "soccer_brazil_campeonato",
+        "commence_time": (current + timedelta(days=2)).isoformat(),
+        "home_team": "T1",
+        "away_team": "T2",
+        "bookmakers": [],
+    }
+    with (
+        TheOddsAPIClient(
+            "secret-for-test", httpx.MockTransport(lambda _: httpx.Response(200, json=wrong_event))
+        ) as client,
+        pytest.raises(ValueError, match="horário"),
+    ):
+        odds_collection.import_event_odds(db, client, 1000, event_id, confirmed=True)
+    with (
+        TheOddsAPIClient(
+            "secret-for-test", httpx.MockTransport(lambda _: httpx.Response(401, text="bad key"))
+        ) as client,
+        pytest.raises(OddsAPIError) as error,
+    ):
+        client.events()
+    assert "secret-for-test" not in str(error.value)
+    assert "bad key" not in str(error.value)
+    with sqlite3.connect(db) as connection:
+        assert (
+            connection.execute(
+                "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='market_quotes'"
+            ).fetchone()[0]
+            == 0
+        )

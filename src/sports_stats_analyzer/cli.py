@@ -439,6 +439,58 @@ def odds_import(
 
 
 @app.command()
+def odds_events(match_id: Annotated[int, typer.Argument(min=1)]) -> None:
+    """Lista eventos da The Odds API próximos à partida BSA, sem gastar crédito de odds."""
+    from sports_stats_analyzer.odds_collection import event_candidates
+    from sports_stats_analyzer.providers.the_odds_api import OddsAPIError, TheOddsAPIClient
+
+    try:
+        settings = Settings()
+        with TheOddsAPIClient(settings.the_odds_api_key.get_secret_value()) as client:
+            result = event_candidates(settings.sports_database_path, client, match_id)
+    except ValidationError:
+        typer.echo("Configuração inválida. Confira o arquivo .env.", err=True)
+        raise typer.Exit(1) from None
+    except (OddsAPIError, ValueError, sqlite3.Error, OSError) as error:
+        typer.echo(f"Falha: {error}", err=True)
+        raise typer.Exit(1) from None
+    typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
+
+
+@app.command()
+def odds_fetch(
+    match_id: Annotated[int, typer.Argument(min=1)],
+    event_id: Annotated[str, typer.Argument()],
+    region: str = "eu",
+    bookmaker: str | None = None,
+    confirm_match: bool = False,
+) -> None:
+    """Importa 1X2 recente de evento conferido; não cria aposta virtual."""
+    from sports_stats_analyzer.odds_collection import import_event_odds
+    from sports_stats_analyzer.providers.the_odds_api import OddsAPIError, TheOddsAPIClient
+
+    try:
+        settings = Settings()
+        with TheOddsAPIClient(settings.the_odds_api_key.get_secret_value()) as client:
+            result = import_event_odds(
+                settings.sports_database_path,
+                client,
+                match_id,
+                event_id,
+                region=region,
+                confirmed=confirm_match,
+                bookmaker=bookmaker,
+            )
+    except ValidationError:
+        typer.echo("Configuração inválida. Confira o arquivo .env.", err=True)
+        raise typer.Exit(1) from None
+    except (OddsAPIError, ValueError, sqlite3.Error, OSError) as error:
+        typer.echo(f"Falha: {error}", err=True)
+        raise typer.Exit(1) from None
+    typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
+
+
+@app.command()
 def odds_add(
     match_id: Annotated[int, typer.Option(min=1)],
     market: Annotated[str, typer.Option()],

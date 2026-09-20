@@ -13,7 +13,8 @@ Teste retrospectivo favorável ao Poisson para 1X2; não comprova rentabilidade.
 Não há execução de apostas em casas.
 
 Fase 5 disponível: previsões prospectivas pela CLI, odds manuais/CSV, avaliação de EV
-e carteira virtual. Rentabilidade não validada;
+e carteira virtual. A The Odds API pode fornecer odds 1X2 atuais após confirmação
+manual do vínculo com uma partida. Rentabilidade não validada;
 até a entrega desta fase, nenhuma cotação real foi cadastrada.
 
 Fase 4: coleta e relatórios de contexto disponíveis. A auditoria acessou elenco e
@@ -194,6 +195,8 @@ lacunas de dados e as verificações necessárias antes de escolher uma nova fon
 ```bash
 uv run sports-stats-analyzer forecast ID_DA_PARTIDA
 uv run sports-stats-analyzer odds-import data/odds.csv
+uv run sports-stats-analyzer odds-events ID_DA_PARTIDA
+uv run sports-stats-analyzer odds-fetch ID_DA_PARTIDA ID_DO_EVENTO --confirm-match
 uv run sports-stats-analyzer odds-assess ID_DA_COTACAO ID_DA_PREVISAO
 uv run sports-stats-analyzer paper-bet ID_DA_COTACAO ID_DA_PREVISAO
 uv run sports-stats-analyzer paper-settle
@@ -203,6 +206,9 @@ uv run sports-stats-analyzer paper-wallet
 Substitua os IDs pelos valores do banco e retornados pelos comandos. Antes de
 prever ou liquidar, atualize e normalize resultados/agenda. O comando `odds-add`
 também aceita observação manual; consulte `--help` e o [template CSV](examples/odds-template.csv).
+Para usar a The Odds API, configure `THE_ODDS_API_KEY` no `.env` local. Confira
+times e horário em `odds-events` antes de confirmar `odds-fetch`; o comando importa
+apenas odds recentes e não cria apostas. Veja as [regras](docs/paper-trading.md).
 
 Somente odds observadas nos últimos 15 minutos; previsões novas e prospectivas.
 Carteira começa com 100 unidades virtuais, aposta fixa de uma unidade, exposição

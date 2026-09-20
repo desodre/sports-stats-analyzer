@@ -5,7 +5,9 @@ real pendente de cotações e resultados observados, sem histórico fabricado.
 
 ## Implementações
 
-- [x] Odds decimais por entrada manual ou CSV, sem outra API.
+- [x] Odds decimais por entrada manual ou CSV.
+- [x] Consulta opcional de eventos e importação de odds 1X2 atuais da The Odds API,
+      com seleção manual do evento, confirmação explícita e validação de frescor.
 - [x] Partida, mercado, seleção, linha, casa, horário e origem obrigatórios.
 - [x] Validação de odds, compatibilidade e validade temporal.
 - [x] Probabilidade implícita e normalização proporcional da margem
@@ -16,7 +18,8 @@ real pendente de cotações e resultados observados, sem histórico fabricado.
 - [x] Aposta unitária fixa, saldo virtual, retorno e queda máxima realizada.
 - [x] Tamanho da amostra e IC exploratório do ROI a partir de 20 apostas liquidadas.
 
-Implementação: `markets.py` e comandos CLI, com migração 2 aditiva.
+Implementação: `markets.py`, `odds_collection.py`, cliente `the_odds_api.py` e
+comandos CLI, com migração 2 aditiva.
 Previsões prospectivas são geradas e persistidas localmente com dados observados;
 não se importam previsões retrospectivas para a carteira. Sem execução automática de apostas,
 integração com casas, múltiplas ou mecanismos para recuperar perdas.
@@ -51,3 +54,9 @@ comprova rentabilidade. Somente 1X2/BSA pode gerar aposta virtual nesta versão.
 
 Ver [regras e comandos](../paper-trading.md), [template CSV](../../examples/odds-template.csv)
 e [evidência da validação](../experiments/phase-5-validation.md).
+
+Extensão de 19/09/2026: `odds-events` e `odds-fetch` adicionados para BSA/1X2.
+Testes HTTP simulados verificam mercado completo, cotações vencidas, repetição sem
+duplicatas, vínculo por horário e não exposição da chave em erros ou dados salvos.
+Consulta com chave real e cobertura de casas ainda não foram verificadas; a chave
+deve estar somente no `.env` local. A carteira não cria apostas ao importar odds.

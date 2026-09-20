@@ -8,7 +8,7 @@ experimento retrospectivo da fase 3. Fonte esportiva continua sendo football-dat
 
 1. Atualize e normalize resultados e agenda de BSA.
 2. Gere uma previsão para uma partida futura com `forecast`.
-3. Registre cotações reais recentes com `odds-add` ou `odds-import`.
+3. Registre cotações reais recentes com `odds-add`, `odds-import` ou `odds-fetch`.
 4. Compare usando `odds-assess`, no horário atual.
 5. Se desejar acompanhar uma decisão elegível, registre-a com `paper-bet`.
 6. Após atualizar os resultados, execute `paper-settle` e consulte `paper-wallet`.
@@ -28,6 +28,38 @@ Substitua os IDs pelos retornados pelos comandos. Não execute os placeholders
 literalmente. `forecast`, `odds-assess` e `paper-bet` usam o relógio atual, sem opção
 de retroagir decisões. `paper-settle` usa resultados já observados e normalizados;
 ele não consulta a rede. Coletar dados posteriores não altera uma previsão já gravada.
+
+## The Odds API: importação opcional de 1X2
+
+Configure `THE_ODDS_API_KEY` no `.env` local com uma chave ativa. A chave é enviada
+somente ao host fixo `api.the-odds-api.com` e não é gravada no SQLite, no `source`
+ou na saída da CLI. Não coloque a chave nos comandos, no Git ou em URLs compartilhadas.
+Uma chave que tenha sido compartilhada fora do ambiente local deve ser substituída
+no painel do provedor antes do uso contínuo.
+
+```bash
+uv run sports-stats-analyzer odds-events ID_DA_PARTIDA
+uv run sports-stats-analyzer odds-fetch ID_DA_PARTIDA ID_DO_EVENTO --region eu --confirm-match
+```
+
+`odds-events` consulta a lista de eventos BSA sem consumir crédito de odds, mostra
+a partida local e candidatos com início a até duas horas dela. **Confira mandante,
+visitante e horário**: os nomes dos clubes não são conciliados automaticamente.
+`odds-fetch` exige o ID escolhido e `--confirm-match`, repete a verificação do
+horário e consulta apenas o mercado `h2h` em formato decimal. `--bookmaker CHAVE`
+limita a importação a uma casa retornada pela API. A região padrão é `eu`;
+outras opções: `uk`, `us`, `us2`, `au`. A disponibilidade de casas e partidas
+depende da fonte e do plano.
+
+Somente mercados 1X2 com mandante, empate e visitante completos entram no banco.
+O horário `last_update` do mercado, ou da casa quando ausente, é usado como horário
+observado: cotações com mais de 15 minutos, futuras ou sem horário são descartadas.
+A saída informa IDs importados, duplicatas e casas descartadas. A origem registrada
+contém provedor, versão, evento, casa e mercado, sem chave. Importar não faz aposta;
+use `odds-assess` e `paper-bet` separadamente. Odds históricas não passam pela
+carteira prospectiva.
+
+Contrato da fonte: [eventos e odds por evento](https://the-odds-api.com/liveapi/guides/v4/).
 
 ## Previsão prospectiva
 

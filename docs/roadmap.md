@@ -5,7 +5,8 @@
 Futebol pré-jogo, inicialmente uma competição com histórico suficiente e disponível
 na conta football-data.org. BSA é o exemplo da CLI, não uma restrição do produto.
 Python é a stack principal; uv gerencia ambiente, dependências e lockfile.
-Nenhuma segunda API será integrada nesta etapa.
+A The Odds API é opcional apenas para cotações 1X2 prospectivas; não fornece
+variáveis ao modelo nem altera a fonte inicial de partidas.
 
 | Fase | Entrega | Estado |
 | --- | --- | --- |
@@ -14,7 +15,7 @@ Nenhuma segunda API será integrada nesta etapa.
 | [2 — Dados analíticos](phases/02-analytics.md) | Normalização, qualidade e indicadores temporais | Implementada e validada |
 | [3 — Probabilidades](phases/03-models.md) | Baselines, Poisson e avaliação temporal | Implementada; experimento BSA 2023–2025 concluído |
 | [4 — Escalações e contexto](phases/04-context.md) | Auditoria, elencos e contexto observado | Implementada no escopo disponível; efeitos individuais adiados |
-| [5 — Avaliação de mercados](phases/05-markets.md) | Cotações, valor esperado e carteira virtual prospectiva | Implementada; rentabilidade ainda não validada |
+| [5 — Avaliação de mercados](phases/05-markets.md) | Cotações manuais/API, valor esperado e carteira virtual prospectiva | Implementada; integração real e rentabilidade ainda não validadas |
 | [6 — Produto e operação](phases/06-product.md) | Painel local, atualização, monitoramento e backup | Implementada; primeira CI remota depende de push |
 | [7 — Enriquecimento](phases/07-enrichment.md) | Auditoria CBF e estudo de novas fontes | Em andamento; revisão dirigida de 2026 concluída, identidade ambígua preservada |
 
@@ -45,7 +46,8 @@ sem verificar acesso, cobertura histórica e condições de uso.
 Um teste limitado com token local confirmou que a Série A brasileira não está
 entre as sete ligas acessíveis nesta conta SportMonks; nenhuma partida foi consultada.
 A fase 5 entregou previsões prospectivas,
-odds manuais/CSV e carteira virtual, ainda sem apostas reais observadas.
+odds manuais/CSV, importação opcional da The Odds API e carteira virtual, ainda
+sem cotações ou apostas reais observadas na fonte integrada.
 A auditoria da fase 4 encontrou
 perfis/elenco, mas não escalações e eventos para BSA 2025; efeitos individuais passam
 para a fase 7. Validar previsões prospectivamente antes de qualquer conclusão de lucro.

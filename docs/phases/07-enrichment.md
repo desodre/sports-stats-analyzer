@@ -112,6 +112,8 @@ antes de misturar métricas com metodologias diferentes.
 Nova fonte resolve lacuna explicitamente registrada, com contrato de uso compatível,
 identidades conciliadas e evidência de qualidade. Feature que não melhora previsão
 pode permanecer informativa, mas não alterar probabilidades sem suporte empírico.
-Nenhuma segunda API paga, modelo de linguagem ou assinatura foi implementada.
+A The Odds API foi integrada opcionalmente na fase 5 apenas para odds prospectivas.
+Nenhuma segunda fonte de estatísticas, modelo de linguagem ou assinatura foi
+implementada para enriquecimento das probabilidades.
 As súmulas baixadas são documentos pós-jogo; não devem ser usadas como informação
 pré-jogo em avaliações históricas sem um horário de disponibilidade comprovado.
