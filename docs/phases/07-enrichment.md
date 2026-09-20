@@ -50,6 +50,10 @@ local e a extração de quadros foram implementados e executados: arquivo com ha
 registrado e 71 quadros amostrados. A avaliação automática de lances, sua revisão
 humana e a situação de direitos para uso continuado permanecem pendentes. O teste
 de melhores momentos não substitui o piloto de partida completa desta fase.
+A [avaliação de SoccerNet e Metrica](../experiments/video-dataset-feasibility.md)
+definiu papéis diferentes para os dois projetos: spotting no vídeo e referência
+de métricas sobre eventos/tracking anônimos. Nenhum modelo externo ou dado de
+treinamento foi integrado; o próximo teste é inferência isolada no vídeo curto.
 
 A [auditoria inicial de 2026](../experiments/cbf-2026-audit.md) registrou 854 HTML
 íntegros, 849 abas presentes, três sinais de conteúdo incompleto no ID `20281` e
@@ -58,7 +62,7 @@ um candidato de identidade entre `20281` e `64742` na Série C/SP. A
 confirmou que o vazio do primeiro ID está no HTML de origem e verificou 15 páginas
 de amostra; nenhum ID foi fundido. A
 [hipótese de vídeo](../experiments/full-match-video.md) está registrada para pesquisa
-futura; não há ingestão ou treinamento de vídeo nesta etapa.
+futura; a coleta curta não foi integrada ao modelo e não houve treinamento de vídeo.
 Os 15 índices de 2023–2025 foram coletados. A
 [rotina sequencial](../cbf-collection.md) retoma as abas por ano e audita cobertura
 e integridade antes de prosseguir. A varredura de 2023 terminou; 2024 está em

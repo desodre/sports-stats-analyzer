@@ -2,8 +2,9 @@
 
 Ideia registrada em 19/09/2026 para a fase 7. Analisar os 90 minutos e acréscimos de
 partidas anteriores para estudar estratégias de equipes e tendências observáveis de
-jogadores e treinadores. É um plano de pesquisa: nenhum vídeo foi coletado e nenhum
-modelo de vídeo foi treinado ou incorporado às probabilidades.
+jogadores e treinadores. Um vídeo curto de melhores momentos foi coletado em
+20/09/2026; nenhuma partida completa foi coletada e nenhum modelo de vídeo foi
+treinado ou incorporado às probabilidades.
 
 ## Perguntas de pesquisa
 
@@ -96,3 +97,6 @@ o placar exibido passa de 0–0 a 0–1, 1–1 e 1–2 nesses pontos amostrados.
 do vídeo não são tempos de jogo, e o vídeo contém cortes e replays. Esse exame
 confirma acesso e decodificação, mas ainda não é detecção automática de eventos nem
 anotação completa dos melhores momentos.
+
+A [avaliação de SoccerNet e Metrica](video-dataset-feasibility.md) compara tarefas,
+acesso, formatos, requisitos e o próximo teste de detecção local.
