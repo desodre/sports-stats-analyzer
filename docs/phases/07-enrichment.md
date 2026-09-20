@@ -44,6 +44,12 @@ isolados não fornecem suporte para essas implementações.
 - [ ] Avaliar piloto de vídeo de partidas completas para estratégias de equipes e
   tendências de jogadores/treinadores, condicionado a direitos de uso e qualidade.
 
+O [protocolo inicial com melhores momentos](../experiments/full-match-video.md)
+foi definido para o vídeo Corinthians × Fluminense de 20/09/2026. A execução
+aguarda arquivo com permissão de processamento; metadados foram verificados, mas
+nenhum lance foi observado ou anotado. O teste de melhores momentos não substitui
+o piloto de partida completa desta fase.
+
 A [auditoria inicial de 2026](../experiments/cbf-2026-audit.md) registrou 854 HTML
 íntegros, 849 abas presentes, três sinais de conteúdo incompleto no ID `20281` e
 um candidato de identidade entre `20281` e `64742` na Série C/SP. A
