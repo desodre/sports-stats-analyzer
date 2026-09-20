@@ -167,7 +167,10 @@ coleta como obter o pacote público de certificados exigido pelo domínio da CBF
 A [auditoria de 2026](docs/experiments/cbf-2026-audit.md) registra a cobertura,
 a revisão dos HTML e a identidade que ainda exige conciliação. A proposta de analisar
 [partidas completas em vídeo](docs/experiments/full-match-video.md) foi guardada
-como pesquisa futura, sem alterar as previsões atuais.
+como pesquisa futura, sem alterar as previsões atuais. O
+[piloto local de vídeo](docs/experiments/full-match-video.md) documenta o download
+de um vídeo de melhores momentos e a extração de quadros para revisão; nenhuma
+variável de vídeo entrou no modelo.
 
 Após revisar os HTML de 2026, os índices de 2023–2025 foram coletados. A rotina
 `sh scripts/collect_cbf_history.sh` coleta as abas desses anos sequencialmente e

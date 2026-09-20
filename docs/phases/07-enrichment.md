@@ -45,10 +45,11 @@ isolados não fornecem suporte para essas implementações.
   tendências de jogadores/treinadores, condicionado a direitos de uso e qualidade.
 
 O [protocolo inicial com melhores momentos](../experiments/full-match-video.md)
-foi definido para o vídeo Corinthians × Fluminense de 20/09/2026. A execução
-aguarda arquivo com permissão de processamento; metadados foram verificados, mas
-nenhum lance foi observado ou anotado. O teste de melhores momentos não substitui
-o piloto de partida completa desta fase.
+foi definido para o vídeo Corinthians × Fluminense de 20/09/2026. O downloader
+local e a extração de quadros foram implementados e executados: arquivo com hash
+registrado e 71 quadros amostrados. A avaliação automática de lances, sua revisão
+humana e a situação de direitos para uso continuado permanecem pendentes. O teste
+de melhores momentos não substitui o piloto de partida completa desta fase.
 
 A [auditoria inicial de 2026](../experiments/cbf-2026-audit.md) registrou 854 HTML
 íntegros, 849 abas presentes, três sinais de conteúdo incompleto no ID `20281` e

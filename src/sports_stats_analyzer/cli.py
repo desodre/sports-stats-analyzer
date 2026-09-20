@@ -621,3 +621,41 @@ def dashboard(port: Annotated[int, typer.Option(min=1024, max=65535)] = 8501) ->
             ]
         )
     )
+
+
+@app.command()
+def video_download(
+    url: Annotated[str, typer.Option(help="URL HTTPS de um vídeo do YouTube.")],
+    output_dir: Annotated[
+        Path, typer.Option(help="Diretório local fora do Git para vídeo e metadados.")
+    ] = Path("data/videos"),
+) -> None:
+    """Baixa um vídeo público em até 720p e registra origem e hash local."""
+    from sports_stats_analyzer.video import VideoError, download_video
+
+    try:
+        result = download_video(url, output_dir)
+    except (VideoError, OSError) as error:
+        typer.echo(f"Falha no download de vídeo: {error}", err=True)
+        raise typer.Exit(1) from None
+    typer.echo(json.dumps(result, ensure_ascii=False, indent=2))
+
+
+@app.command()
+def video_frames(
+    path: Annotated[Path, typer.Option(help="Arquivo local de vídeo a analisar.")],
+    output_dir: Annotated[
+        Path | None, typer.Option(help="Diretório local de quadros; padrão ao lado do vídeo.")
+    ] = None,
+    every_s: Annotated[int, typer.Option(min=1, max=60)] = 5,
+) -> None:
+    """Extrai quadros com horários para inspeção local, sem enviar mídia à rede."""
+    from sports_stats_analyzer.video import VideoError, extract_frames
+
+    target = output_dir or path.with_suffix("") / "frames"
+    try:
+        result = extract_frames(path, target, every_s)
+    except (VideoError, OSError) as error:
+        typer.echo(f"Falha ao extrair quadros: {error}", err=True)
+        raise typer.Exit(1) from None
+    typer.echo(json.dumps(result, ensure_ascii=False, indent=2))

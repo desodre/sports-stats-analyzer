@@ -39,21 +39,22 @@ na checagem de eventos e participantes, respeitando a disponibilidade pós-jogo.
 
 Em 20/09/2026, foi identificado o [vídeo de melhores momentos de Corinthians 1 × 3
 Fluminense](https://www.youtube.com/watch?v=78rS30sszUM), publicado pela ge tv para
-a 28ª rodada do Brasileirão 2026. Os metadados públicos indicam duração de 5min54.
-O conteúdo audiovisual ainda **não foi assistido, baixado ou processado** neste
-projeto. Antes de processá-lo localmente, é necessário obter uma cópia com permissão
-de uso adequada; o [YouTube informa](https://support.google.com/youtube/answer/56100?hl=en)
-que não oferece download dos vídeos enviados por outros usuários.
+a 28ª rodada do Brasileirão 2026. Os metadados indicam duração de 5min54. Uma
+cópia local foi baixada para `data/videos/`, fora do Git. O arquivo tem 79.835.450
+bytes e SHA-256 `563e060f576c379940ee75f74846242877490348614eb98b436b61371f8992f4`.
+O [YouTube informa](https://support.google.com/youtube/answer/56100?hl=en) que não
+oferece download dos vídeos enviados por outros usuários; uso e processamento do
+material dependem dos direitos aplicáveis. Nenhum vídeo será distribuído pelo projeto.
 
 Este vídeo pode testar a identificação de **eventos exibidos** e a ligação entre
 instante do vídeo e relógio da partida. A seleção editorial impede medir cobertura
 de todos os eventos, volume de passes, movimentação contínua, forma física ou fase
 individual; tampouco permite concluir padrões de treinador a partir de um jogo.
 
-### Protocolo executável quando houver arquivo autorizado
+### Protocolo com arquivo local
 
 1. Registrar origem, licença/permissão, hash do arquivo, duração e partida. Manter
-   o vídeo fora do Git e dos dados de treino até definir sua licença.
+   vídeo e quadros fora do Git e dos dados de treino até definir sua licença.
 2. Assistir aos 5min54 e marcar, por lance visível: segundo inicial/final do vídeo,
    minuto da partida se legível, tipo de evento, equipe, atleta apenas se confirmado,
    se é replay, evidência visual e confiança. Usar `desconhecido` para campos
@@ -71,3 +72,27 @@ Formato mínimo de cada anotação: `video_start_s`, `video_end_s`, `match_clock
 `review_status`. Este piloto responde se conseguimos reconhecer e conferir os
 lances **selecionados**. A avaliação de estratégias e comportamento ao longo dos
 90 minutos continua dependente de partidas completas.
+
+### Download e primeira inspeção local
+
+O comando `video-download` usa `yt-dlp[default]` com Node.js e FFmpeg. Restringe a
+uma URL HTTPS de vídeo do YouTube, um item por vez e qualidade até 720p. Salva mídia
+e proveniência mínima (URL, canal, duração, tamanho e hash) em `data/videos/`, que
+está ignorado pelo Git. Não usa cookies ou login e permite retomar arquivo parcial.
+O [guia do yt-dlp](https://github.com/yt-dlp/yt-dlp/wiki/EJS) explica a necessidade
+de um runtime JavaScript e do componente EJS para extração atual do YouTube.
+
+```sh
+uv run sports-stats-analyzer video-download \
+  --url 'https://www.youtube.com/watch?v=78rS30sszUM'
+uv run sports-stats-analyzer video-frames \
+  --path data/videos/78rS30sszUM.mp4 --every-s 5
+```
+
+O primeiro download foi concluído e `video-frames` gerou 71 JPEGs com horários
+solicitados de 0 a 350 segundos e um manifesto JSON local. A duração medida por
+FFprobe foi 353,521 s. Quadros de 0, 120, 200 e 300 s foram abertos e estão legíveis:
+o placar exibido passa de 0–0 a 0–1, 1–1 e 1–2 nesses pontos amostrados. Os tempos
+do vídeo não são tempos de jogo, e o vídeo contém cortes e replays. Esse exame
+confirma acesso e decodificação, mas ainda não é detecção automática de eventos nem
+anotação completa dos melhores momentos.
