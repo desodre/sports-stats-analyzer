@@ -1,7 +1,7 @@
 # Fase 6 — Painel e operação
 
-Estado: implementada. A primeira execução remota da CI depende do próximo push;
-publicação continua condicionada a uma decisão de infraestrutura. Depende das fases anteriores.
+Estado: implementada. A CI remota foi validada em `main`; publicação continua
+condicionada a uma decisão de infraestrutura. Depende das fases anteriores.
 
 ## Implementações
 
@@ -47,8 +47,8 @@ restaurado em `data/restores/phase6-verified.db`; ambos com integridade `ok`.
 Teste de processos comprovou espera pelo estado de cota compartilhada; testes de
 retry verificaram limite de tentativas, reset de cota e ausência de repetição em 403.
 Workflow de CI configurado em `.github/workflows/ci.yml`, com actions fixadas por SHA,
-permissão somente de leitura e execução do mesmo script local. A primeira execução remota
-depende de push, que não faz parte desta entrega. Cron/timer não instalado.
+permissão somente de leitura e execução do mesmo script local. A execução remota do
+commit `2534c11` concluiu com sucesso em 21/09/2026. Cron/timer não instalado.
 Autenticação e publicação não implementadas: painel restrito a localhost por padrão.
 Drift é diagnóstico por média, não teste formal; não há promoção automática do modelo.
 

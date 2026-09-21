@@ -1,13 +1,19 @@
 # Fase 7 — Notícias e enriquecimento futuro
 
-Estado: coleta exploratória, auditoria automatizada e revisão dirigida das páginas
-de clubes CBF de 2026 concluídas. Conciliação definitiva de identidades,
-enriquecimento estatístico e integração ao modelo continuam pendentes.
+Estado: exploração ampla encerrada após coleta, auditoria e estudos de viabilidade.
+O acervo permanece disponível, mas novas implementações foram redirecionadas ao
+recorte Bahia das fases 8–14. Conciliação de identidades, enriquecimento estatístico
+e integração ao modelo só avançam quando necessários para esse recorte.
 O lote integral de páginas dos clubes de 2026 terminou: os cinco índices e as
 849 abas previstas estão armazenados. A auditoria automatizada verificou cobertura,
 estrutura e integridade; a revisão dirigida confirmou o conteúdo dos casos
 sinalizados, mas não resolveu a relação entre os IDs do Ituano.
 Depende de lacunas demonstradas pelas fases anteriores e escolha futura de fontes.
+
+Decisão de 21/09/2026: não continuar a expansão horizontal por clubes, competições
+e provedores. Os itens abertos abaixo formam um inventário, não uma fila ativa.
+Trabalho novo deve justificar como melhora o corpus, a análise de partidas, os
+perfis de jogadores ou a leitura tática do Bahia.
 
 Lacuna demonstrada na fase 4: BSA 2025 não retornou escalações, bancos ou eventos
 mesmo com expansão solicitada. Minutos, efeitos individuais regularizados, cenários
@@ -63,24 +69,18 @@ confirmou que o vazio do primeiro ID está no HTML de origem e verificou 15 pág
 de amostra; nenhum ID foi fundido. A
 [hipótese de vídeo](../experiments/full-match-video.md) está registrada para pesquisa
 futura; a coleta curta não foi integrada ao modelo e não houve treinamento de vídeo.
-Os 15 índices de 2023–2025 foram coletados. A
-[rotina sequencial](../cbf-collection.md) retoma as abas por ano e audita cobertura
-e integridade antes de prosseguir. A varredura de 2023 terminou; 2024 está em
-execução e 2025 ainda aguarda a coleta das abas.
-Em 19/09/2026, a varredura de 2023 parou no HTTP 404 da aba `atletas` do clube
-`20287` na Copa do Brasil, embora o índice o liste. O coletor agora registra 404
-por aba e prossegue, mantendo a indisponibilidade visível na auditoria. A rotina
-histórica aceita essa lacuna explícita para avançar de ano; a coleta de 2023–2025
-continua em andamento e a cobertura final ainda precisa ser medida. Após reiniciar
-o serviço, as três abas desse clube responderam com sucesso; o 404 observado foi
-transitório nessa URL.
-Em 19/09/2026, a coleta chegou à Série C/2024 e parou em timeout do handshake TLS
-na aba `atletas` do clube `20065`. O coletor agora repete falhas de transporte em
-até três tentativas, preservando a cota e o limite do lote; a página continua
-pendente caso a rede permaneça indisponível. Na retomada, essa aba respondeu e foi
-armazenada. A auditoria de 2023 encerrou com 662 páginas íntegras e três abas
-registradas como HTTP 404; também sinalizou seis conteúdos vazios e quatro
-estatísticas incompletas para revisão. A coleta de 2024 continua em execução.
+Os 15 índices e a coleta de abas de 2023–2025 foram concluídos localmente. A
+[rotina sequencial](../cbf-collection.md) retomou falhas de transporte e preservou
+indisponibilidades explícitas. As auditorias registraram:
+
+- 2023: 657 de 660 abas observadas, três indisponíveis e 13 alertas;
+- 2024: 657 de 657 abas observadas e sete alertas;
+- 2025: 663 de 663 abas observadas e 19 alertas.
+
+Os alertas representam conteúdo vazio, resultado incompleto ou HTTP 404, não falha
+de integridade dos arquivos armazenados. A revisão ampla desses casos deixa de ser
+prioridade; casos ligados ao Bahia devem ser retomados na fase 9. Os relatórios
+locais permanecem fora do Git em `data/cbf/audits/`.
 O [catálogo local de jogos de 2026](../experiments/cbf-2026-match-catalog.md)
 deduplicou 1.508 URLs e mediu a cobertura de históricos das cinco competições.
 O mesmo comando servirá aos anos históricos quando as abas estiverem coletadas.

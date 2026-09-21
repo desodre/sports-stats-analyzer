@@ -5,6 +5,11 @@ validação temporal e comunicação de incerteza. Fonte inicial de partidas:
 [football-data.org](https://www.football-data.org/). A coleta experimental de
 súmulas da CBF é separada e ainda não alimenta o modelo.
 
+O foco de desenvolvimento a partir da fase 8 é o **Esporte Clube Bahia**. A nova
+trilha constrói um corpus longitudinal de partidas, perfis observáveis de jogadores
+e padrões da equipe e do técnico antes de expandir a análise para outros clubes.
+Adversários entram somente como contexto das partidas do Bahia nesta etapa.
+
 ## Estado atual
 
 Fases 0–3 implementadas: ambiente uv, coleta, normalização, indicadores, modelos
@@ -21,6 +26,12 @@ cotações de 23 casas para uma partida, sem aposta virtual registrada.
 Fase 4: coleta e relatórios de contexto disponíveis. A auditoria acessou elenco e
 perfil de jogador, mas não encontrou escalações/eventos nas partidas expandidas de
 BSA 2025. Impacto individual e minutos permanecem adiados, sem alterar o modelo.
+
+Fase 7 encerrou a exploração ampla inicial e preservou seus dados como referência.
+As [fases 8–14](docs/roadmap.md) implementam o recorte Bahia: protocolo, corpus,
+anotação de partidas, perfis de jogadores, estratégia, dossiê e critérios para uma
+futura expansão comparativa. Essas fases estão planejadas e ainda não representam
+funcionalidades entregues.
 
 ## Iniciar
 
