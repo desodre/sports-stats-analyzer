@@ -23,7 +23,7 @@ prioridade com o corpus do Bahia.
 | [5 — Avaliação de mercados](phases/05-markets.md) | Cotações manuais/API, valor esperado e carteira virtual prospectiva | Implementada; API validada em uma rodada, rentabilidade não validada |
 | [6 — Produto e operação](phases/06-product.md) | Painel local, atualização, monitoramento e backup | Implementada; CI remota validada |
 | [7 — Enriquecimento](phases/07-enrichment.md) | Auditoria CBF e estudo de novas fontes | Exploração ampla encerrada; acervo preservado |
-| [8 — Recorte Bahia](phases/08-bahia-scope.md) | Identidade, perguntas, protocolo e corpus-piloto | Planejada; Bahia selecionado |
+| [8 — Recorte Bahia](phases/08-bahia-scope.md) | Identidade, perguntas, protocolo e corpus-piloto | Implementada; catálogo e contrato v1 validados |
 | [9 — Corpus longitudinal](phases/09-bahia-corpus.md) | Partidas, escalações, súmulas, vídeos e proveniência | Planejada |
 | [10 — Análise de partidas](phases/10-bahia-match-analysis.md) | Anotação estruturada e validação da extração | Planejada |
 | [11 — Perfis de jogadores](phases/11-bahia-player-profiles.md) | Padrões individuais contextualizados | Planejada |
@@ -74,8 +74,9 @@ para a nova trilha do Bahia quando houver cobertura suficiente. Validar previsõ
 prospectivamente antes de qualquer conclusão de lucro.
 
 Decisão de 21/09/2026: interromper a expansão horizontal e concentrar novas
-implementações no Bahia. O primeiro marco é a fase 8: definir identidade entre
-fontes, perguntas observáveis, taxonomia e dez partidas para o corpus-piloto.
+implementações no Bahia. A fase 8 concluiu a definição de identidade entre fontes,
+perguntas observáveis, taxonomia e dez partidas para o corpus-piloto. O marco atual
+é a fase 9: construir o corpus longitudinal com proveniência e cobertura explícitas.
 
 ## Regra de conclusão
 

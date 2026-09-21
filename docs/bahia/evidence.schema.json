@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sports-stats-analyzer.local/schemas/bahia-evidence-v1.json",
+  "title": "Bahia observation evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "observation_id",
+    "match",
+    "source",
+    "temporal",
+    "context",
+    "entities",
+    "classification",
+    "content",
+    "confidence",
+    "review_status",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {"const": "bahia-evidence-v1"},
+    "observation_id": {"type": "string", "minLength": 1},
+    "match": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["football_data_match_id", "cbf_match_id"],
+      "properties": {
+        "football_data_match_id": {"type": "integer"},
+        "cbf_match_id": {"type": ["integer", "null"]}
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_type", "locator", "collected_at", "rights_status", "sha256"],
+      "properties": {
+        "source_type": {
+          "enum": ["provider_snapshot", "official_page", "match_report", "video", "manual"]
+        },
+        "locator": {"type": "string", "minLength": 1},
+        "collected_at": {"type": ["string", "null"], "format": "date-time"},
+        "rights_status": {
+          "enum": ["unreviewed", "local_analysis_only", "permitted", "restricted", "prohibited"]
+        },
+        "sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "temporal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["video_start_s", "video_end_s", "match_clock", "period", "is_replay"],
+      "properties": {
+        "video_start_s": {"type": ["number", "null"], "minimum": 0},
+        "video_end_s": {"type": ["number", "null"], "minimum": 0},
+        "match_clock": {"type": ["string", "null"]},
+        "period": {"enum": ["first_half", "second_half", "extra_time", "shootout", "unknown"]},
+        "is_replay": {"type": ["boolean", "null"]}
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["venue_role", "score_state", "player_state"],
+      "properties": {
+        "venue_role": {"enum": ["home", "away", "neutral"]},
+        "score_state": {"enum": ["leading", "drawing", "trailing", "unknown"]},
+        "player_state": {"enum": ["equal", "bahia_superior", "bahia_inferior", "unknown"]}
+      }
+    },
+    "entities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["focus_team_id", "player_id", "opponent_team_id"],
+      "properties": {
+        "focus_team_id": {"const": 1777},
+        "player_id": {"type": ["string", "integer", "null"]},
+        "opponent_team_id": {"type": ["integer", "null"]}
+      }
+    },
+    "classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["phase", "action", "third", "channel"],
+      "properties": {
+        "phase": {
+          "enum": [
+            "attacking_build_up",
+            "attacking_progression",
+            "attacking_final_third",
+            "attacking_set_piece",
+            "defensive_high_block",
+            "defensive_mid_block",
+            "defensive_low_block",
+            "defensive_set_piece",
+            "transition_attack",
+            "transition_defence",
+            "stoppage",
+            "unknown"
+          ]
+        },
+        "action": {
+          "enum": [
+            "receive",
+            "pass",
+            "cross",
+            "carry",
+            "dribble",
+            "shot",
+            "header",
+            "pressure",
+            "duel",
+            "interception",
+            "recovery",
+            "block",
+            "clearance",
+            "foul",
+            "restart",
+            "substitution_effect",
+            "off_ball_run",
+            "shape_change",
+            "other",
+            "unknown"
+          ]
+        },
+        "third": {"enum": ["defensive", "middle", "attacking", "unknown"]},
+        "channel": {"enum": ["left", "central", "right", "unknown"]}
+      }
+    },
+    "content": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["observed_fact", "interpretation"],
+      "properties": {
+        "observed_fact": {"type": "string", "minLength": 1},
+        "interpretation": {"type": ["string", "null"]}
+      }
+    },
+    "confidence": {"enum": ["high", "medium", "low", "unknown"]},
+    "review_status": {"enum": ["unreviewed", "reviewed", "disputed", "rejected"]},
+    "limitations": {"type": "array", "items": {"type": "string"}}
+  }
+}

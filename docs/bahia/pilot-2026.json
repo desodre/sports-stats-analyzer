@@ -1,0 +1,146 @@
+{
+  "version": "bahia-pilot-2026-v1",
+  "selected_at": "2026-09-21",
+  "focus_team": {
+    "display_name": "Esporte Clube Bahia",
+    "football_data": {
+      "provider": "football-data.org",
+      "team_id": 1777,
+      "observed_name": "EC Bahia"
+    },
+    "cbf": {
+      "primary_team_id": 61377,
+      "observed_name": "Bahia",
+      "identity_status": "candidate_by_fixture_linkage",
+      "linked_fixture_evidence": 23,
+      "historical_unresolved_ids": [20006],
+      "excluded_ids": [21878]
+    }
+  },
+  "scope": {
+    "competition_code": "BSA",
+    "competition_name": "Campeonato Brasileiro Série A",
+    "season": 2026,
+    "first_kickoff_at": "2026-01-28T23:00:00+00:00",
+    "last_kickoff_at": "2026-05-30T20:30:00+00:00",
+    "pilot_size": 10,
+    "selection_basis": [
+      "five_home_and_five_away",
+      "four_wins_three_draws_three_losses",
+      "varied_scorelines",
+      "finished_matches_with_cross_provider_link"
+    ]
+  },
+  "matches": [
+    {
+      "football_data_match_id": 554743,
+      "cbf_match_id": 831892,
+      "kickoff_at": "2026-01-28T23:00:00+00:00",
+      "status": "FINISHED",
+      "venue_role": "away",
+      "opponent": {"football_data_team_id": 1779, "name": "SC Corinthians Paulista"},
+      "result": {"bahia_goals": 2, "opponent_goals": 1, "outcome": "win"},
+      "selection_tags": ["away", "win", "one_goal_margin"],
+      "cbf_url": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/corinthians-x-bahia/831892"
+    },
+    {
+      "football_data_match_id": 554751,
+      "cbf_match_id": 831907,
+      "kickoff_at": "2026-02-05T22:00:00+00:00",
+      "status": "FINISHED",
+      "venue_role": "home",
+      "opponent": {"football_data_team_id": 1765, "name": "Fluminense FC"},
+      "result": {"bahia_goals": 1, "opponent_goals": 1, "outcome": "draw"},
+      "selection_tags": ["home", "draw", "two_total_goals"],
+      "cbf_url": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/bahia-x-fluminense/831907"
+    },
+    {
+      "football_data_match_id": 554802,
+      "cbf_match_id": 831957,
+      "kickoff_at": "2026-03-18T22:00:00+00:00",
+      "status": "FINISHED",
+      "venue_role": "home",
+      "opponent": {"football_data_team_id": 4286, "name": "RB Bragantino"},
+      "result": {"bahia_goals": 2, "opponent_goals": 0, "outcome": "win"},
+      "selection_tags": ["home", "win", "clean_sheet"],
+      "cbf_url": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/bahia-x-red-bull-bragantino/831957"
+    },
+    {
+      "football_data_match_id": 554816,
+      "cbf_match_id": 831968,
+      "kickoff_at": "2026-03-22T19:00:00+00:00",
+      "status": "FINISHED",
+      "venue_role": "away",
+      "opponent": {"football_data_team_id": 4287, "name": "Clube do Remo"},
+      "result": {"bahia_goals": 1, "opponent_goals": 4, "outcome": "loss"},
+      "selection_tags": ["away", "loss", "three_goal_margin"],
+      "cbf_url": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/remo-x-bahia/831968"
+    },
+    {
+      "football_data_match_id": 554831,
+      "cbf_match_id": 831988,
+      "kickoff_at": "2026-04-05T22:30:00+00:00",
+      "status": "FINISHED",
+      "venue_role": "home",
+      "opponent": {"football_data_team_id": 1769, "name": "SE Palmeiras"},
+      "result": {"bahia_goals": 1, "opponent_goals": 2, "outcome": "loss"},
+      "selection_tags": ["home", "loss", "one_goal_margin"],
+      "cbf_url": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/bahia-x-palmeiras/831988"
+    },
+    {
+      "football_data_match_id": 554846,
+      "cbf_match_id": 831994,
+      "kickoff_at": "2026-04-11T21:30:00+00:00",
+      "status": "FINISHED",
+      "venue_role": "away",
+      "opponent": {"football_data_team_id": 4364, "name": "Mirassol FC"},
+      "result": {"bahia_goals": 2, "opponent_goals": 1, "outcome": "win"},
+      "selection_tags": ["away", "win", "one_goal_margin"],
+      "cbf_url": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/mirassol-x-bahia/831994"
+    },
+    {
+      "football_data_match_id": 554862,
+      "cbf_match_id": 832018,
+      "kickoff_at": "2026-04-25T21:30:00+00:00",
+      "status": "FINISHED",
+      "venue_role": "home",
+      "opponent": {"football_data_team_id": 6685, "name": "Santos FC"},
+      "result": {"bahia_goals": 2, "opponent_goals": 2, "outcome": "draw"},
+      "selection_tags": ["home", "draw", "four_total_goals"],
+      "cbf_url": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/bahia-x-santos-fc/832018"
+    },
+    {
+      "football_data_match_id": 554878,
+      "cbf_match_id": 832022,
+      "kickoff_at": "2026-05-03T19:00:00+00:00",
+      "status": "FINISHED",
+      "venue_role": "away",
+      "opponent": {"football_data_team_id": 1776, "name": "São Paulo FC"},
+      "result": {"bahia_goals": 2, "opponent_goals": 2, "outcome": "draw"},
+      "selection_tags": ["away", "draw", "four_total_goals"],
+      "cbf_url": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/sao-paulo-x-bahia/832022"
+    },
+    {
+      "football_data_match_id": 554901,
+      "cbf_match_id": 832057,
+      "kickoff_at": "2026-05-25T23:00:00+00:00",
+      "status": "FINISHED",
+      "venue_role": "away",
+      "opponent": {"football_data_team_id": 4241, "name": "Coritiba FBC"},
+      "result": {"bahia_goals": 2, "opponent_goals": 3, "outcome": "loss"},
+      "selection_tags": ["away", "loss", "five_total_goals"],
+      "cbf_url": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/coritiba-saf-x-bahia/832057"
+    },
+    {
+      "football_data_match_id": 554911,
+      "cbf_match_id": 832068,
+      "kickoff_at": "2026-05-30T20:30:00+00:00",
+      "status": "FINISHED",
+      "venue_role": "home",
+      "opponent": {"football_data_team_id": 1770, "name": "Botafogo FR"},
+      "result": {"bahia_goals": 2, "opponent_goals": 1, "outcome": "win"},
+      "selection_tags": ["home", "win", "one_goal_margin"],
+      "cbf_url": "https://www.cbf.com.br/futebol-brasileiro/jogos/campeonato-brasileiro/serie-a/2026/bahia-x-botafogo/832068"
+    }
+  ]
+}

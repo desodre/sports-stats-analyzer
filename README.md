@@ -30,8 +30,13 @@ BSA 2025. Impacto individual e minutos permanecem adiados, sem alterar o modelo.
 Fase 7 encerrou a exploração ampla inicial e preservou seus dados como referência.
 As [fases 8–14](docs/roadmap.md) implementam o recorte Bahia: protocolo, corpus,
 anotação de partidas, perfis de jogadores, estratégia, dossiê e critérios para uma
-futura expansão comparativa. Essas fases estão planejadas e ainda não representam
-funcionalidades entregues.
+futura expansão comparativa. A fase 8 está implementada; as fases 9–14 permanecem
+planejadas e ainda não representam funcionalidades entregues.
+
+A fase 8 já definiu os IDs do Bahia entre fontes, dez partidas da Série A 2026,
+perguntas observáveis, taxonomia e contrato de evidência. Consulte o
+[escopo do Bahia](docs/bahia/scope.md). Vídeos permanecem apenas como candidatos
+até que origem e direitos sejam registrados.
 
 ## Iniciar
 
