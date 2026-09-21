@@ -1,6 +1,7 @@
 # Fase 9 — Corpus longitudinal do Bahia
 
-Estado: planejada. Depende da fase 8.
+Estado: em andamento desde 21/09/2026. A primeira fonte de vídeo foi catalogada por
+metadados; o corpus das dez partidas e o relatório de completude permanecem abertos.
 
 ## Objetivo
 
@@ -39,3 +40,16 @@ pelo Git.
 Um catálogo disponível na web não comprova licença, estabilidade ou cobertura.
 Oponente é armazenado como contexto da partida do Bahia; sua análise longitudinal
 completa pertence à fase 14.
+
+## Primeiro incremento
+
+O [`source-catalog.json`](../bahia/source-catalog.json) vincula o vídeo público
+`q0MIJVd_9U4`, do canal ge tv, à partida Remo 4–1 Bahia do piloto. A inspeção leu
+somente metadados: duração de 13.219 segundos, publicação em 22/03/2026 e estado de
+transmissão arquivada. O início da partida em `01:02:57` foi informado pelo usuário e
+continua pendente de revisão manual. Nenhum vídeo foi baixado; direitos permanecem
+`unreviewed`.
+
+As [`perguntas de produto`](../bahia/research-questions.md) definem as respostas-alvo
+para temporada, próximos jogos, estratégia contra Flamengo/Palmeiras e comparação
+limitada de atletas. Elas não alteram os critérios de conclusão desta fase.

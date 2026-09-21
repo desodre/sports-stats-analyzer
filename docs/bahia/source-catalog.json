@@ -1,0 +1,47 @@
+{
+  "version": "bahia-source-catalog-v1",
+  "updated_at": "2026-09-21",
+  "sources": [
+    {
+      "source_id": "youtube:q0MIJVd_9U4",
+      "source_type": "video",
+      "platform": "youtube",
+      "locator": "https://www.youtube.com/watch?v=q0MIJVd_9U4",
+      "match": {
+        "football_data_match_id": 554816,
+        "cbf_match_id": 831968,
+        "description": "Remo 4–1 Bahia"
+      },
+      "metadata": {
+        "video_id": "q0MIJVd_9U4",
+        "title": "JOGO COMPLETO: REMO X BAHIA | CAMPEONATO BRASILEIRO | ge tv",
+        "channel": "ge tv",
+        "duration_s": 13219,
+        "upload_date": "2026-03-22",
+        "availability": "public",
+        "live_status": "was_live"
+      },
+      "content": {
+        "coverage_claim": "full_match",
+        "match_content_start_s": 3777,
+        "match_content_start_basis": "user_reported",
+        "timing_review_status": "unreviewed"
+      },
+      "provenance": {
+        "reported_by": "user",
+        "reported_at": "2026-09-21",
+        "metadata_inspection_method": "yt-dlp --skip-download",
+        "metadata_inspected_at": "2026-09-21",
+        "match_link_status": "matched_by_title_date_and_pilot_fixture"
+      },
+      "rights_status": "unreviewed",
+      "local_file": null,
+      "sha256": null,
+      "limitations": [
+        "Public availability does not establish permission to download, process or redistribute.",
+        "The claimed match start requires manual confirmation before timestamped annotation.",
+        "No local copy was created during cataloging."
+      ]
+    }
+  ]
+}
